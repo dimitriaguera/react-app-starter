@@ -1,0 +1,58 @@
+{
+  "name": "react-app-starter",
+  "version": "0.0.1",
+  "description": "boilerplate express/react/redux/semanticUI with auth system",
+  "main": "modules/core/client/index.js",
+  "repository": "https://github.com/dimitriaguera/react-app-starter.git",
+  "author": "Dimitri Aguera <dimitri.aguera@gmail.com>",
+  "scripts": {
+    "test": "test",
+    "start": "node server",
+    "watch": "webpack -d --watch"
+  },
+  "babel": {
+    "presets": [
+      "es2015",
+      "react"
+    ],
+    "plugins": [
+      "transform-object-rest-spread"
+    ]
+  },
+  "keywords": [
+    "react",
+    "express"
+  ],
+  "license": "GNU GENERAL PUBLIC LICENSE",
+  "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
+    "bluebird": "^3.5.0",
+    "body-parser": "^1.17.2",
+    "express": "^4.15.4",
+    "immutability-helper": "^2.3.1",
+    "jwt-simple": "^0.5.1",
+    "lodash": "^4.17.4",
+    "mongoose": "^4.11.8",
+    "morgan": "^1.8.2",
+    "passport": "^0.4.0",
+    "passport-jwt": "^3.0.0",
+    "path": "^0.12.7",
+    "pug": "^2.0.0-rc.3",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
+    "react-redux": "^5.0.6",
+    "react-router-dom": "^4.2.2",
+    "redux": "^3.7.2",
+    "redux-thunk": "^2.2.0",
+    "semantic-ui-react": "^0.73.0"
+  },
+  "devDependencies": {
+    "babel": "^6.23.0",
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "webpack": "^3.5.5"
+  }
+}
