@@ -29,7 +29,7 @@ class Account extends Component {
             if ( user ) {
                 return (
                     <div>
-                        <h1>{user.name}'s Account</h1>
+                        <h1>{user.username}'s Account</h1>
                     </div>
                 );
             }

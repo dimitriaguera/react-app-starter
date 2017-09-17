@@ -151,12 +151,12 @@ class UserListItem extends Component {
         return (
             <List.Item>
                 <List.Content floated='right'>
-                    <Button onClick={() => history.push('/user/edit/'+user.name)} basic color='grey' icon='setting' circular/>
+                    <Button onClick={() => history.push('/user/edit/'+user.username)} basic color='grey' icon='setting' circular/>
                     <Button onClick={() => {
-                        handleOpen(user.name, index)
+                        handleOpen(user.username, index)
                     }} basic color='grey' icon='delete' circular/>
                 </List.Content>
-                <List.Header><Link to={`/user/${user.name}`}>{user.name}</Link></List.Header>
+                <List.Header><Link to={`/user/${user.username}`}>{user.username}</Link></List.Header>
                 <List.Description>{roles}</List.Description>
             </List.Item>
         );

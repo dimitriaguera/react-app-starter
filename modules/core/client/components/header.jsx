@@ -18,7 +18,7 @@ const Header = ({ isAuthenticated, user, logoutHandler, loading, fetching }) => 
 
     const accountItem = () => (
         <Menu.Menu position='right'>
-            <Dropdown text={user.name} pointing className='link item'>
+            <Dropdown text={user.username} pointing className='link item'>
                 <Dropdown.Menu>
                     <Dropdown.Item as={Link} to='/account'>My account</Dropdown.Item>
                     <Dropdown.Divider />

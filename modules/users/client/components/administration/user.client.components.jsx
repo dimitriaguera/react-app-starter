@@ -32,7 +32,7 @@ class User extends Component {
             <div>
             { !!user && (
                 <div>
-                    <h1>{user.name}'s User Page</h1>
+                    <h1>{user.username}'s User Page</h1>
                 </div>
              )}
             </div>

@@ -17,7 +17,7 @@ exports.login = function (req, res) {
 
     Promise.coroutine( function*() {
 
-         const user = yield User.findOne( {name: username} );
+         const user = yield User.findOne( {username: username} );
          if ( !user ) {
              res.json({
                  success: false,
@@ -58,7 +58,7 @@ exports.register = function (req, res) {
     } else {
 
         const newUser = new User({
-            name: username,
+            username: username,
             password: password,
             roles: roles,
         });
@@ -67,7 +67,8 @@ exports.register = function (req, res) {
             if (err) {
                 return res.json({
                     success: false,
-                    msg: `Account name "${newUser.name}" already exists.`
+                    msg: err.message,
+                    //msg: `Account name "${newUser.name}" already exists.`
                 });
             }
             res.json({
@@ -128,6 +129,9 @@ exports.update = function(req, res) {
 
     const user = req.model;
 
+    // Store date update.
+    user.updated = Date.now();
+
     // Here specify fields to update.
     if ( req.body.roles ) user.roles = req.body.roles;
 
@@ -171,7 +175,7 @@ exports.userByName = function(req, res, next, name) {
     //     });
     // }
 
-    User.findOne({name:name}, '-password').exec(function(err, user){
+    User.findOne({username:name}, '-password').exec(function(err, user){
         if ( err ) {
             return next( err );
         }

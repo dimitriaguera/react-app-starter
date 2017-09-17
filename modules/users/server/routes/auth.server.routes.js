@@ -6,7 +6,7 @@
 
 const passport = require('passport');
 const authorizeRoles = require('../roles/role-authorize');
-//const { ADMIN_ROLE, USER_ROLE, INVITE_ROLE } = require('../../commons/roles');
+const { ADMIN_ROLE } = require('../../commons/roles');
 
 module.exports = function (app) {
 
@@ -23,11 +23,11 @@ module.exports = function (app) {
         .get( users.account );
 
     // Users list
-    app.route('/api/users').all(passport.authenticate('jwt', { session: false }), authorizeRoles('ADMIN_ROLE'))
+    app.route('/api/users').all(passport.authenticate('jwt', { session: false }), authorizeRoles(ADMIN_ROLE))
         .get( users.users );
 
     // Unique user
-    app.route('/api/users/:userName').all(passport.authenticate('jwt', { session: false }), authorizeRoles('ADMIN_ROLE'))
+    app.route('/api/users/:userName').all(passport.authenticate('jwt', { session: false }), authorizeRoles(ADMIN_ROLE))
         .get( users.user )
         .put( users.update )
         .delete( users.delete );

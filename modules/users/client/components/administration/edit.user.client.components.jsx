@@ -84,7 +84,7 @@ class EditUser extends Component {
                 }
 
                 // If user is currrent connected user and as admin role, can't be unchecked.
-                else if ( role === ADMIN_ROLE && AuthService.hasRole(user, [role]) && (currentUser.name === user.name)) {
+                else if ( role === ADMIN_ROLE && AuthService.hasRole(user, [role]) && (currentUser.username === user.username)) {
                     props.checked = true;
                     props.disabled = true;
                 }
@@ -105,7 +105,7 @@ class EditUser extends Component {
             return (
                 <div>
                     <div>
-                        <h1>Edit {user.name} account</h1>
+                        <h1>Edit {user.username} account</h1>
                         <Form onSubmit={this.handleUpdateUser}>
                             {rolesForm}
                             <Button type='submit' content='Save' color='blue'/>
