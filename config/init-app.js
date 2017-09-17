@@ -7,6 +7,8 @@ const path = require('path');
 const config = require('./env/local-config');
 const express = require('express');
 const morgan = require('morgan');
+const helmet = require('helmet');
+const compression = require('compression');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const passport = require('passport');
@@ -32,12 +34,20 @@ module.exports.initLocals = function(app) {
         res.locals.url = req.protocol + '://' + req.headers.host + req.originalUrl;
         next();
     });
+
+    // Disable the powered-by from header resp.
+    app.disable('x-powered-by');
 };
 
 /**
- * Init various middleware
+ * Init various express middlewares
  */
 module.exports.initMiddleware = function(app) {
+
+    // Helmet middleware.
+    app.use(helmet());
+    // Compression.
+    app.use(compression());
 
     // Body parser
     app.use(bodyParser.urlencoded({

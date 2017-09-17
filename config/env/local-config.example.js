@@ -14,7 +14,8 @@ module.exports = {
     },
     security: {
         jwtSecret: 'secret',
-        saltRounds: 10
+        illegalUsernames: ['administrator', 'password', 'user',
+            'unknown', 'anonymous', 'null', 'undefined', 'api']
     },
     app: {
         name: 'react-app-starter',

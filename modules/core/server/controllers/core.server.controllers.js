@@ -9,6 +9,6 @@ exports.index = function(req, res) {
 exports.renderNotFound = function(req, res) {
     res.status(404).json({
         success: false,
-        msg: 'File not found'
+        msg: 'File or Api road not found'
     });
 };
