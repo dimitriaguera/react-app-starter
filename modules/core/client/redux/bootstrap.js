@@ -3,6 +3,7 @@
  */
 import ApiService from 'core/client/services/core.api.services'
 import { requestBOOT, failureBOOT, proceedBOOT, successBOOT } from './actions/boot.actions'
+import { getLocalToken } from 'users/client/services/users.storage.services'
 import store from './store'
 
 /**
@@ -13,7 +14,8 @@ import store from './store'
 export default function () {
 
     // Get token on sessionStorage.
-    const token = sessionStorage.getItem('token');
+    const token = getLocalToken();
+
 
     // Start boot.
     store.dispatch(initBoot(token))

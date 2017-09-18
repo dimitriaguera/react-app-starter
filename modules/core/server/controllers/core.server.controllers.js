@@ -7,8 +7,9 @@ exports.index = function(req, res) {
 };
 
 exports.renderNotFound = function(req, res) {
-    res.status(404).json({
-        success: false,
-        msg: 'File or Api road not found'
-    });
+    // res.status(404).json({
+    //     success: false,
+    //     msg: 'File not found !'
+    // });
+    res.status(404).render('./modules/core/server/views/404');
 };

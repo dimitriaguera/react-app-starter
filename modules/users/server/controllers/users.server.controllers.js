@@ -33,7 +33,10 @@ exports.login = function (req, res) {
 
              res.json({
                  success: true,
-                 msg: Object.assign(secureUser, {token: `BEARER ${token}`})
+                 msg: {
+                     user: secureUser,
+                     token: `BEARER ${token}`,
+                 }
              });
 
          } else {

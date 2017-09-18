@@ -108,20 +108,13 @@ module.exports.initViewEngine = function(app) {
  */
 module.exports.initRoutes = function(app) {
 
-    // Static files
+    // Virtual path for Static files
     app.use('/static', express.static(path.resolve('./public')));
 
     // Modules routes
     require('../modules/users/server/routes/auth.server.routes')(app);
     require('../modules/core/server/routes/core.server.routes')(app);
 
-    // Main routes
-    app.route('/testSecure').get(
-        passport.authenticate('jwt', { session: false }),
-        authorizeRoles('ADMIN_ROLE'),
-        (req, res) => {
-            res.json(req.user);
-        });
 };
 
 

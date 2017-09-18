@@ -1,6 +1,7 @@
 /**
  * Created by Dimitri Aguera on 11/09/2017.
  */
+import { Redirect } from 'react-router-dom'
 import config from 'env/local-config'
 import { requestAPI, successAPI, failureAPI } from '../actions/api.actions'
 
@@ -34,6 +35,7 @@ function proceedCallApi( callAPI ) {
 
             // Server response testing.
             .then(rep => {
+                checkStatus(rep);
                 if ( !rep.ok ) {
                     return Promise.reject(rep.statusText);
                 }
@@ -105,6 +107,49 @@ const callApiMiddleware = store => next => action => {
     // Start API pipe.
     return next( proceedCallApi( callAPI ) );
 };
+
+/**
+ * Check response status.
+ * Thanks Vladimir Metnew <vladimirmetnew@gmail.com>
+ * @param res
+ * @returns {*}
+ */
+function checkStatus ( rep ) {
+
+    const {status} = rep;
+
+    if (status >= 200 && status < 300) {
+        // Everything is ok
+        return rep
+    }
+    else if (status >= 300 && status < 400) {
+        // 300 Multiple Choices
+        // 301 - Moved Permanently,
+        // 302 - Found, Moved Temporarily
+        // 304 - not modified
+        // 307 - Temporary Redirect
+        return rep
+    }
+    else if (status === 400) {
+        // Probably is a validation error
+        return rep
+    }
+    else if (status === 403 || status === 401) {
+        // 401 - Forbidden
+        // 403 - Unauthorized
+        // remove local token in this case
+        //resetLocalToken()
+    }
+    else if (status === 404) {
+        // Not Found
+        alert('404 !');
+        return rep
+    }
+    else if (status >= 500) {
+        // Server error
+        return rep
+    }
+}
 
 export { CALL_API }
 export default callApiMiddleware

@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import update from 'immutability-helper'
 import ApiService from 'core/client/services/core.api.services'
-import AuthService from 'users/client/services/users.auth.services'
+import { getLocalToken } from 'users/client/services/users.storage.services'
 import { setUsers } from 'users/client/redux/actions'
 import { List, Confirm, Button } from 'semantic-ui-react'
 
@@ -28,7 +28,9 @@ class Users extends Component {
     componentWillMount(){
         const _self = this;
         this.props.fetchUsers().then( (data) => {
-            _self.setState({ users:data.msg })
+            if (data.success) {
+                _self.setState({users: data.msg})
+            }
         });
     }
 
@@ -106,13 +108,13 @@ const mapDispatchToProps = dispatch => {
         fetchUsers: () => dispatch(
             ApiService.request( 'users', {
                 types: { HOOK_TYPE: setUsers },
-                token: AuthService.getStoredToken(),
+                token: getLocalToken(),
             })
         ),
         deleteUser: (name) => dispatch(
             ApiService.request( 'users/' + name, {
                 method: 'DELETE',
-                token: AuthService.getStoredToken(),
+                token: getLocalToken(),
             })
         )
     }

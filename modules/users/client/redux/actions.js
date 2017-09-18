@@ -2,6 +2,7 @@
  * Created by Dimitri Aguera on 08/09/2017.
  */
 import ApiService from 'core/client/services/core.api.services'
+import { setLocalToken, clearLocalStorage } from 'users/client/services/users.storage.services'
 import { DEFAULT_AUTH_ROLE } from 'users/commons/roles'
 
 export const LOGIN_REQUEST = 'LOGIN_REQUEST'
@@ -84,7 +85,7 @@ export function logoutUser(){
 
     return dispatch => {
         dispatch(requestLogout());
-        sessionStorage.removeItem('token');
+        clearLocalStorage();
         dispatch(logoutOk());
     }
 }
@@ -107,9 +108,9 @@ export function registerNewUser( creds ) {
                 FAILURE_TYPE: registerError,
                 SUCCESS_TYPE: (data) => {
                     return dispatch => {
-                        const user = data.msg;
+                        const { token } = data.msg;
                         // If success, put token in sessionStorage
-                        sessionStorage.setItem('token', user.token);
+                        setLocalToken(token);
 
                         // And set store to authenticated.
                         dispatch(registerSuccess(user));
@@ -144,9 +145,9 @@ export function loginUser( creds ) {
                 FAILURE_TYPE: loginError,
                 SUCCESS_TYPE: (data) => {
                     return dispatch => {
-                        const user = data.msg;
+                        const { user, token } = data.msg;
                         // If success, put token in sessionStorage
-                        sessionStorage.setItem('token', user.token);
+                        setLocalToken(token);
 
                         // And set store to authenticated.
                         dispatch(registerUser(user));

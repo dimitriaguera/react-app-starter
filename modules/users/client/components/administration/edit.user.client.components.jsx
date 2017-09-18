@@ -3,7 +3,8 @@ import { connect } from 'react-redux'
 //import _ from 'lodash'
 
 import ApiService from 'core/client/services/core.api.services'
-import AuthService from 'users/client/services/users.auth.services'
+import { hasRole } from 'users/client/services/users.auth.services'
+import { getLocalToken } from 'users/client/services/users.storage.services'
 import { ALL_ROLE, ADMIN_ROLE, DEFAULT_AUTH_ROLE } from 'users/commons/roles'
 import { Form, Checkbox, Button } from 'semantic-ui-react'
 
@@ -84,13 +85,13 @@ class EditUser extends Component {
                 }
 
                 // If user is currrent connected user and as admin role, can't be unchecked.
-                else if ( role === ADMIN_ROLE && AuthService.hasRole(user, [role]) && (currentUser.username === user.username)) {
+                else if ( role === ADMIN_ROLE && hasRole(user, [role]) && (currentUser.username === user.username)) {
                     props.checked = true;
                     props.disabled = true;
                 }
 
                 // If user has role, default check it.
-                else if ( AuthService.hasRole(user, [role]) ) {
+                else if ( hasRole(user, [role]) ) {
                     props.defaultChecked = true;
                 }
 
@@ -129,13 +130,13 @@ const mapDispatchToProps = dispatch => {
     return {
         fetchUser: ( name ) => dispatch(
             ApiService.request( 'users/' + name, {
-                token: AuthService.getStoredToken(),
+                token: getLocalToken(),
             })
         ),
         updateUser: ( name, update ) => dispatch(
             ApiService.request( 'users/' + name, {
                 method: 'PUT',
-                token: AuthService.getStoredToken(),
+                token: getLocalToken(),
                 body: update,
             })
         ),

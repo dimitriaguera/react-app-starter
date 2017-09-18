@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { Dropdown, Menu, Loader } from 'semantic-ui-react'
 import { logoutUser } from 'users/client/redux/actions'
-import AuthService from 'users/client/services/users.auth.services'
+import { allowDisplayItem } from 'users/client/services/users.auth.services'
 import { ADMIN_ROLE, USER_ROLE, INVITE_ROLE } from 'users/commons/roles'
 
 const Header = ({ isAuthenticated, user, logoutHandler, loading, fetching }) => {
@@ -36,8 +36,8 @@ const Header = ({ isAuthenticated, user, logoutHandler, loading, fetching }) => 
               {homeItem()}
 
                 {/* Authorized policies links */}
-              {AuthService.allowDisplayItem(usersItem, user, [ADMIN_ROLE])}
-              {AuthService.allowDisplayItem(accountItem, user)}
+              {allowDisplayItem(usersItem, user, [ADMIN_ROLE])}
+              {allowDisplayItem(accountItem, user)}
 
               {/* Conditional links */}
               {!isAuthenticated && loginItem()}

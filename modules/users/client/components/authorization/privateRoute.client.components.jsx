@@ -3,12 +3,12 @@
 import React, { Component } from 'react'
 import { Route, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
-import AuthService from 'users/client/services/users.auth.services'
+import { hasRole } from 'users/client/services/users.auth.services'
 
 const PrivateRouteComp = ({ component: Component, roles, isAuthenticated, user, ...rest }) => (
     <Route {...rest} render={props => {
 
-        const rolePermission = roles ? AuthService.hasRole(user, roles) : true;
+        const rolePermission = roles ? hasRole(user, roles) : true;
 
         let nextRoute;
 
@@ -18,7 +18,7 @@ const PrivateRouteComp = ({ component: Component, roles, isAuthenticated, user, 
            nextRoute =
                <Redirect to={{
                    pathname: '/',
-                   state: { from: props.location}
+                   state: { from: props.location }
                }}/>;
         }
 
@@ -27,7 +27,7 @@ const PrivateRouteComp = ({ component: Component, roles, isAuthenticated, user, 
         else if ( !isAuthenticated ) {
             nextRoute = <Redirect to={{
                 pathname: '/login',
-                state: { from: props.location}
+                state: { from: props.location }
             }}/>;
         }
 
