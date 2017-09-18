@@ -8,12 +8,24 @@ import { getLocalToken } from 'users/client/services/users.storage.services'
 
 const BASE_URL = config.app.api_base_url;
 
+/**
+ * Check, build, and return a function
+ * to execute a controlled fetch request.
+ *
+ * @param method
+ * @param endpoint
+ * @param data
+ * @returns {function()}
+ */
 function forgeResquest( method, endpoint, data = {} ) {
 
+    // Build request url.
     let url = BASE_URL + endpoint;
 
+    // Return function that execute controlled fetch.
     return () => {
 
+        // Build defaults fetch request params.
         const params = {
             method,
             headers: {
@@ -21,6 +33,7 @@ function forgeResquest( method, endpoint, data = {} ) {
             },
         };
 
+        // If GET, remove body data.
         if ( method === 'GET' ) {
             try {
                 // const urlParams = data || {};
@@ -39,36 +52,33 @@ function forgeResquest( method, endpoint, data = {} ) {
             throw new Error(`Invalid XHR request. See ${method} at ${url}`);
         }
 
+        // Get token from localStorage or sessionStorage
+        // And put it in headers.
         const token = getLocalToken();
         if (token) {
             params.headers.authorization = token;
         }
 
+        // Build fetch.
         return fetch(url, params);
     }
 }
 
-class ApiService {
+/**
+ *
+ * Those functions encapsule requests with CALL_API symbol.
+ * This symbol trigger API middleware when action is dispatched.
+ * Then, the middleware pass request through api pipe.
+ *
+ */
 
-    request( endpoint, options = {} ) {
-
-        const { method, body, types } = options;
-
-        return {
-            [CALL_API]: {
-                endpoint: endpoint,
-                types: types,
-                method: method,
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": getLocalToken(),
-                },
-                body: body,
-            }
-        }
-    }
-}
-
+/**
+ * Request API with GET method.
+ *
+ * @param endpoint
+ * @param options
+ * @returns {{}}
+ */
 export const get = ( endpoint, options = {} ) => {
     const { data, types } = options;
     return {
@@ -79,6 +89,13 @@ export const get = ( endpoint, options = {} ) => {
     }
 };
 
+/**
+ * Request API with POST method.
+ *
+ * @param endpoint
+ * @param options
+ * @returns {{}}
+ */
 export const post = ( endpoint, options = {} ) => {
     const { data, types } = options;
     return {
@@ -89,6 +106,13 @@ export const post = ( endpoint, options = {} ) => {
     }
 };
 
+/**
+ * Request API with PUT method.
+ *
+ * @param endpoint
+ * @param options
+ * @returns {{}}
+ */
 export const put = ( endpoint, options = {} ) => {
     const { data, types } = options;
     return {
@@ -99,6 +123,13 @@ export const put = ( endpoint, options = {} ) => {
     }
 };
 
+/**
+ * Request API with DELETE method.
+ *
+ * @param endpoint
+ * @param options
+ * @returns {{}}
+ */
 export const del = ( endpoint, options = {} ) => {
     const { data, types } = options;
     return {
@@ -108,5 +139,3 @@ export const del = ( endpoint, options = {} ) => {
         }
     }
 };
-
-export default new ApiService()
