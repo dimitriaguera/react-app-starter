@@ -2,8 +2,10 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import update from 'immutability-helper'
-import ApiService from 'core/client/services/core.api.services'
+import { ADMIN_ROLE } from 'users/commons/roles'
+import { get, put, del } from 'core/client/services/core.api.services'
 import { getLocalToken } from 'users/client/services/users.storage.services'
+import { hasRole } from 'users/client/services/users.auth.services'
 import { setUsers } from 'users/client/redux/actions'
 import { List, Confirm, Button } from 'semantic-ui-react'
 
@@ -79,12 +81,12 @@ class Users extends Component {
 
         // Get state and props properties.
         const { users, modal } = this.state;
-        const { history } = this.props;
+        const { history, currentUser } = this.props;
 
         // Build user list.
         const userList = users.map((user, index)=>{
             return (
-                <UserListItem key={user._id} user={user} index={index} history={history} handleOpen={this.handleOpen}/>
+                <UserListItem key={user._id} user={user} currentUser={currentUser} index={index} history={history} handleOpen={this.handleOpen}/>
             );
         });
 
@@ -106,23 +108,20 @@ class Users extends Component {
 const mapDispatchToProps = dispatch => {
     return {
         fetchUsers: () => dispatch(
-            ApiService.request( 'users', {
+            get( 'users', {
                 types: { HOOK_TYPE: setUsers },
-                token: getLocalToken(),
             })
         ),
         deleteUser: (name) => dispatch(
-            ApiService.request( 'users/' + name, {
-                method: 'DELETE',
-                token: getLocalToken(),
-            })
-        )
+            del( 'users/' + name )
+        ),
     }
 };
 
 const mapStateToProps = state => {
     return {
         loading: state.apiStore.isFetching,
+        currentUser: state.authenticationStore._user,
     }
 };
 
@@ -143,10 +142,30 @@ class UserListItem extends Component {
     }
 
     render() {
-        const {user, index, handleOpen, history} = this.props;
+        const {user, index, handleOpen, history, currentUser} = this.props;
         const roles = user.roles.reduce((a, b) => {
             return `${a} ${b}`
         }, '');
+
+        const deleteButton = () => {
+            if ( hasRole(user, [ADMIN_ROLE]) && (currentUser.username === user.username) ) {
+                return (
+                    <Button disabled
+                            basic
+                            color='grey'
+                            icon='delete'
+                            circular />
+                );
+            } else {
+                return (
+                    <Button onClick={() => handleOpen(user.username, index)}
+                            basic
+                            color='grey'
+                            icon='delete'
+                            circular />
+                );
+            }
+        };
 
         console.log('RENDER LIST');
 
@@ -154,9 +173,7 @@ class UserListItem extends Component {
             <List.Item>
                 <List.Content floated='right'>
                     <Button onClick={() => history.push('/user/edit/'+user.username)} basic color='grey' icon='setting' circular/>
-                    <Button onClick={() => {
-                        handleOpen(user.username, index)
-                    }} basic color='grey' icon='delete' circular/>
+                    {deleteButton()}
                 </List.Content>
                 <List.Header><Link to={`/user/${user.username}`}>{user.username}</Link></List.Header>
                 <List.Description>{roles}</List.Description>

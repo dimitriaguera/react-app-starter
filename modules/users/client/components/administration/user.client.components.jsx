@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 
-import ApiService from 'core/client/services/core.api.services'
+import { get } from 'core/client/services/core.api.services'
 import { getLocalToken } from 'users/client/services/users.storage.services'
 
 class User extends Component {
@@ -43,9 +43,7 @@ class User extends Component {
 const mapDispatchToProps = dispatch => {
     return {
         fetchUser: ( name ) => dispatch(
-            ApiService.request( 'users/' + name, {
-                token: getLocalToken(),
-            })
+            get( 'users/' + name )
         )
     }
 };

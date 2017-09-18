@@ -1,8 +1,11 @@
 /**
  * Created by Dimitri Aguera on 08/09/2017.
  */
+import thunk from 'redux-thunk'
 import logger from './logger'
-import callApiMiddleware from './call.api'
+import api from './api'
 
-export const apiMiddleware = callApiMiddleware
-export const middlewares = [logger]
+// Export middlewares array for Redux.
+const middlewares = [api, thunk, logger];
+
+export default middlewares

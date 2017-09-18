@@ -1,11 +1,8 @@
 /**
  * Created by Dimitri Aguera on 11/09/2017.
  */
-import { Redirect } from 'react-router-dom'
-import config from 'env/local-config'
 import { requestAPI, successAPI, failureAPI } from '../actions/api.actions'
 
-const BASE_URL = config.app.api_base_url;
 const CALL_API = Symbol('Call API');
 
 /**
@@ -31,7 +28,7 @@ function proceedCallApi( callAPI ) {
         dispatch(REQUEST_TYPE());
 
         // Start server request.
-        return makeCall( callAPI )
+        return callAPI.send()
 
             // Server response testing.
             .then(rep => {
@@ -71,30 +68,12 @@ function proceedCallApi( callAPI ) {
 }
 
 /**
- * Forging API server request.
- *
- * @param callAPI
- * @returns {*}
- */
-const makeCall = ( callAPI ) => {
-    const { endpoint, body, method, headers } = callAPI;
-    let config = {
-            method: method,
-            headers: headers,
-            body: body,
-            mode: 'cors',
-            cache: 'default'
-    };
-    return fetch( BASE_URL + endpoint, config );
-};
-
-/**
  * Middleware that hook API actions,
  * Then call API calling pipe.
  *
  * @param store
  */
-const callApiMiddleware = store => next => action => {
+const api = store => next => action => {
 
     // Get API symbol.
     const callAPI = action[CALL_API];
@@ -152,4 +131,4 @@ function checkStatus ( rep ) {
 }
 
 export { CALL_API }
-export default callApiMiddleware
+export default api

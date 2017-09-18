@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
-//import _ from 'lodash'
-
-import ApiService from 'core/client/services/core.api.services'
+import { put, get } from 'core/client/services/core.api.services'
 import { hasRole } from 'users/client/services/users.auth.services'
 import { getLocalToken } from 'users/client/services/users.storage.services'
 import { ALL_ROLE, ADMIN_ROLE, DEFAULT_AUTH_ROLE } from 'users/commons/roles'
@@ -56,11 +54,7 @@ class EditUser extends Component {
             roles: getRoleArray( formRoles ),
         };
 
-        const body = JSON.stringify({
-            roles:update.roles,
-        });
-
-        this.props.updateUser( name, body )
+        this.props.updateUser( name, update )
             .then( (data) => {
                 _self.setState({user: _.merge( user, update )})
             });
@@ -129,15 +123,11 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         fetchUser: ( name ) => dispatch(
-            ApiService.request( 'users/' + name, {
-                token: getLocalToken(),
-            })
+            get( 'users/' + name )
         ),
         updateUser: ( name, update ) => dispatch(
-            ApiService.request( 'users/' + name, {
-                method: 'PUT',
-                token: getLocalToken(),
-                body: update,
+            put( 'users/' + name, {
+                data: update,
             })
         ),
     }

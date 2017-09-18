@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 
-import ApiService from 'core/client/services/core.api.services'
+import { get } from 'core/client/services/core.api.services'
 import { getLocalToken } from 'users/client/services/users.storage.services'
 
 class Account extends Component {
@@ -13,7 +13,6 @@ class Account extends Component {
         };
     }
 
-    // Lorsque le component est appelé, on requete le BDD.
     componentWillMount(){
         const _self = this;
         this.props.fetchAccount()
@@ -43,9 +42,7 @@ class Account extends Component {
 const mapDispatchToProps = dispatch => {
     return {
         fetchAccount: () => dispatch(
-            ApiService.request( 'account', {
-                token: getLocalToken(),
-            })
+            get( 'account' )
         )
     }
 };

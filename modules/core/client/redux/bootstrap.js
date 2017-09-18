@@ -1,7 +1,7 @@
 /**
  * Created by Dimitri Aguera on 12/09/2017.
  */
-import ApiService from 'core/client/services/core.api.services'
+import { get } from 'core/client/services/core.api.services'
 import { requestBOOT, failureBOOT, proceedBOOT, successBOOT } from './actions/boot.actions'
 import { getLocalToken } from 'users/client/services/users.storage.services'
 import store from './store'
@@ -34,8 +34,7 @@ function initBoot( token ) {
     // Then store them.
     if ( token !== 'undefined' && !!token ) {
         return dispatch => {
-            dispatch(ApiService.request('account', {
-                token: token,
+            dispatch(get('account', {
                 types: {
                     REQUEST_TYPE: requestBOOT,
                     FAILURE_TYPE: failureBOOT,
