@@ -117,7 +117,7 @@ function checkStatus ( rep ) {
         // 401 - Forbidden
         // 403 - Unauthorized
         // remove local token in this case
-        //resetLocalToken()
+        // resetLocalToken()
     }
     else if (status === 404) {
         // Not Found

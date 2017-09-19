@@ -35,11 +35,16 @@ class EditUser extends Component {
     componentWillMount() {
         const _self = this;
         const name = _self.props.match.params.userName;
+        const { history } = _self.props;
+
         this.props.fetchUser( name )
             .then( (data) => {
+                if ( !data.success ) {
+                    return history.push('/not-found');
+                }
                 _self.setState({
                     user: data.msg,
-                    formRoles: setRoleArray( data.msg.roles ),
+                    formRoles: setRoleArray(data.msg.roles),
                 })
             });
     }

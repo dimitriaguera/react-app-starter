@@ -21,7 +21,6 @@ class Boot extends Component {
 
     render() {
         const isBooted = this.props.isBooted;
-
         // Application's tags
         const application = (
             <BrowserRouter>

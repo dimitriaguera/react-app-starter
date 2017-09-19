@@ -18,11 +18,11 @@ const Main = () => (
         <Container>
             <Switch>
                 <Route exact path='/' component={Home}/>
-                <Route path='/register' component={Register}/>
-                <Route path='/login' component={Login}/>
-                <PrivateRoute roles={[ADMIN_ROLE]} path='/users' component={Users}/>
+                <Route exact path='/register' component={Register}/>
+                <Route exact path='/login' component={Login}/>
+                <PrivateRoute exact roles={[ADMIN_ROLE]} path='/users' component={Users}/>
                 <PrivateRoute roles={[ADMIN_ROLE]} path='/user/edit/:userName' component={EditUser}/>
-                <PrivateRoute path='/account' component={Account}/>
+                <PrivateRoute exact path='/account' component={Account}/>
                 <PrivateRoute path='/user/:userName' component={User}/>
                 <Route component={NotFound} />
             </Switch>

@@ -46,6 +46,7 @@ module.exports.initMiddleware = function(app) {
 
     // Helmet middleware.
     app.use(helmet());
+
     // Compression.
     app.use(compression());
 
@@ -99,7 +100,7 @@ module.exports.initViewEngine = function(app) {
 
     app.engine('server.views.html', require('pug').__express);
     app.set('view engine', 'server.views.html');
-    app.set('views', path.resolve('./'))
+    app.set('views', path.resolve('./'));
 };
 
 /**

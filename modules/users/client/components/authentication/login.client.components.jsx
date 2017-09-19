@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { loginUser } from 'users/client/redux/actions'
-import { Form, Button, Divider, Header } from 'semantic-ui-react'
+import { Form, Button, Divider, Header, Message } from 'semantic-ui-react'
 
 class Login extends Component {
 
@@ -14,6 +14,8 @@ class Login extends Component {
             username:'',
             password:'',
             redirectToReferrer: false,
+            error: false,
+            message:'',
         };
     }
 
@@ -32,8 +34,13 @@ class Login extends Component {
 
         const _self = this;
 
-        this.props.handleSubmit(this.state).then( () =>
-            _self.setState({redirectToReferrer: true})
+        this.props.handleSubmit(this.state).then( (data) => {
+                if (!data.success) {
+                    _self.setState({message: data.msg, error: true });
+                } else {
+                    _self.setState({redirectToReferrer: true});
+                }
+            }
         );
         e.preventDefault();
     }
@@ -41,7 +48,7 @@ class Login extends Component {
     render(){
 
         const { from } = this.props.location.state || { from: { pathname: '/' } };
-        const { redirectToReferrer, username, password } = this.state;
+        const { redirectToReferrer, username, password, message, error } = this.state;
         const { history } = this.props;
 
         if ( redirectToReferrer ) {
@@ -55,7 +62,8 @@ class Login extends Component {
         return(
             <div>
                 <Header>Sign In</Header>
-                <Form onSubmit={this.submitForm}>
+                <Form error={error} onSubmit={this.submitForm}>
+                    <Message error content={message}/>
                     <Form.Group>
                     <Form.Input required placeholder='Name' name='username' value={username} onChange={this.handleInputChange} />
                     <Form.Input required type='password' placeholder='Password' name='password' value={password} onChange={this.handleInputChange} />
