@@ -4,7 +4,7 @@
 import {
     REGISTER_REQUEST, REGISTER_SUCCESS, REGISTER_FAILURE,
     LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE,
-    LOGOUT_REQUEST, LOGOUT_SUCCESS, FETCH_USERS
+    LOGOUT_REQUEST, LOGOUT_SUCCESS
 } from '../actions'
 
 let initialState = {
@@ -70,23 +70,6 @@ export const authenticationStore = (state = initialState, action) => {
                 isAuthenticated: false,
                 _user: null,
                 error: {},
-            });
-
-        default:
-            return state
-    }
-};
-
-let initialUsersState = {
-    users: [],
-};
-
-export const usersStore = (state = initialUsersState, action) => {
-    switch (action.type) {
-
-        case FETCH_USERS:
-            return Object.assign({}, state, {
-                users: action.users,
             });
 
         default:

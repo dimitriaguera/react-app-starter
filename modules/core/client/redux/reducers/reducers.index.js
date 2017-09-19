@@ -4,13 +4,12 @@
 import { combineReducers } from 'redux'
 import apiStore from './api.store'
 import bootStore from './boot.store'
-import { authenticationStore, usersStore } from 'users/client/redux/reducers/authenticationStore'
+import { authenticationStore } from 'users/client/redux/reducers/authentication.store'
 
 const storeApp = combineReducers({
     authenticationStore,
     bootStore,
     apiStore,
-    usersStore,
 });
 
 export default storeApp

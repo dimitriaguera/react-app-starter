@@ -16,8 +16,6 @@ export const REGISTER_REQUEST = 'REGISTER_REQUEST'
 export const REGISTER_SUCCESS = 'REGISTER_SUCCESS'
 export const REGISTER_FAILURE = 'REGISTER_FAILURE'
 
-export const FETCH_USERS = 'FETCH_USERS'
-
 export const requestLogin = () => {
     return {
         type: LOGIN_REQUEST,
@@ -66,13 +64,6 @@ export const requestLogout = () => {
 export const logoutOk = () => {
     return {
         type: LOGOUT_SUCCESS,
-    }
-};
-
-export const setUsers = ( data ) => {
-    return {
-        type: FETCH_USERS,
-        users: data.msg,
     }
 };
 

@@ -108,9 +108,7 @@ class Users extends Component {
 const mapDispatchToProps = dispatch => {
     return {
         fetchUsers: () => dispatch(
-            get( 'users', {
-                types: { HOOK_TYPE: setUsers },
-            })
+            get( 'users' )
         ),
         deleteUser: (name) => dispatch(
             del( 'users/' + name )

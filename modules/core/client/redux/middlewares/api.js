@@ -2,6 +2,7 @@
  * Created by Dimitri Aguera on 11/09/2017.
  */
 import { requestAPI, successAPI, failureAPI } from '../actions/api.actions'
+import { logoutUser } from 'users/client/redux/actions'
 
 const CALL_API = Symbol('Call API');
 
@@ -32,7 +33,7 @@ function proceedCallApi( callAPI ) {
 
             // Server response testing.
             .then(rep => {
-                checkStatus(rep);
+                checkStatus(rep, dispatch);
                 if ( !rep.ok ) {
                     return Promise.reject(rep.statusText);
                 }
@@ -93,7 +94,7 @@ const api = store => next => action => {
  * @param res
  * @returns {*}
  */
-function checkStatus ( rep ) {
+function checkStatus ( rep, dispatch ) {
 
     const {status} = rep;
 
@@ -116,8 +117,8 @@ function checkStatus ( rep ) {
     else if (status === 403 || status === 401) {
         // 401 - Forbidden
         // 403 - Unauthorized
-        // remove local token in this case
-        // resetLocalToken()
+        // Logout user from store in this case.
+        return dispatch(logoutUser());
     }
     else if (status === 404) {
         // Not Found
