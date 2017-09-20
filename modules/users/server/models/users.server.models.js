@@ -8,7 +8,7 @@ const Schema = mongoose.Schema;
 const bcrypt = require('bcrypt-nodejs');
 const Promise = require('bluebird');
 const path = require('path');
-const config = require(path.resolve('./config/env/local-config'));
+const config = require(path.resolve('./config/env/config'));
 
 
 /**

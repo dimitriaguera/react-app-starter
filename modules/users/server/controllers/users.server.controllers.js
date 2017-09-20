@@ -8,7 +8,7 @@ const mongoose = require('mongoose');
 const Promise = require('bluebird');
 const jwt = require('jsonwebtoken');
 const path = require('path');
-const config = require(path.resolve('./config/env/local-config'));
+const config = require(path.resolve('./config/env/config'));
 const _ = require('lodash');
 
 exports.login = function (req, res) {
@@ -29,7 +29,7 @@ exports.login = function (req, res) {
          if ( isValidPwd ) {
 
              const secureUser = user.secure();
-             const token = jwt.sign( secureUser, config.security.jwtSecret, {expiresIn: '1h'} );
+             const token = jwt.sign( secureUser, config.security.jwtSecret, {expiresIn: config.session.maxAgeToken} );
 
              res.json({
                  success: true,

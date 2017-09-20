@@ -7,8 +7,10 @@
   "author": "Dimitri Aguera <dimitri.aguera@gmail.com>",
   "scripts": {
     "test": "test",
-    "start": "node server",
-    "watch": "webpack -d --watch"
+    "start": "set NODE_ENV=development && node server",
+    "watch": "webpack -w --config webpack.dev.js",
+    "start-prod": "set NODE_ENV=production && node server",
+    "build-prod": "webpack --config webpack.prod.js"
   },
   "babel": {
     "presets": [
@@ -19,6 +21,9 @@
       "transform-object-rest-spread"
     ]
   },
+  "stylelint": {
+    "extends": "stylelint-config-standard"
+  },
   "keywords": [
     "react",
     "express"
@@ -28,7 +33,9 @@
     "bcrypt-nodejs": "0.0.3",
     "bluebird": "^3.5.0",
     "body-parser": "^1.17.2",
+    "chalk": "^2.1.0",
     "compression": "^1.7.0",
+    "dateformat": "^3.0.0",
     "express": "^4.15.4",
     "helmet": "^3.8.1",
     "immutability-helper": "^2.3.1",
@@ -44,18 +51,37 @@
     "react-dom": "^15.6.1",
     "react-redux": "^5.0.6",
     "react-router-dom": "^4.2.2",
-    "react-router-redux": "^4.0.8",
     "redux": "^3.7.2",
     "redux-thunk": "^2.2.0",
+    "semantic-ui-css": "^2.2.12",
     "semantic-ui-react": "^0.73.0"
   },
   "devDependencies": {
+    "autoprefixer-loader": "^3.2.0",
     "babel": "^6.23.0",
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-react": "^6.24.1",
-    "webpack": "^3.5.5"
+    "clean-webpack-plugin": "^0.1.16",
+    "cross-env": "^5.0.5",
+    "css-loader": "^0.28.7",
+    "extract-text-webpack-plugin": "^3.0.0",
+    "file-loader": "^0.11.2",
+    "html-webpack-plugin": "^2.30.1",
+    "img-loader": "^2.0.0",
+    "node-sass": "^4.5.3",
+    "optimize-css-assets-webpack-plugin": "^3.2.0",
+    "postcss-loader": "^2.0.6",
+    "sass-loader": "^6.0.6",
+    "style-loader": "^0.18.2",
+    "stylelint": "^8.1.1",
+    "stylelint-config-standard": "^17.0.0",
+    "stylelint-webpack-plugin": "^0.9.0",
+    "uglifyjs-webpack-plugin": "^0.4.6",
+    "url-loader": "^0.5.9",
+    "webpack": "^3.6.0",
+    "webpack-merge": "^4.1.0"
   }
 }

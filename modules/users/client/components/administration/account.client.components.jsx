@@ -4,6 +4,8 @@ import { connect } from 'react-redux'
 import { get } from 'core/client/services/core.api.services'
 import { getLocalToken } from 'users/client/services/users.storage.services'
 
+require('./blue.scss');
+
 class Account extends Component {
 
     constructor(){

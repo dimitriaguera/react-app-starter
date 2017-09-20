@@ -14,6 +14,10 @@ import Login from 'users/client/components/authentication/login.client.component
 import Register from 'users/client/components/authentication/register.client.components.jsx';
 import NotFound from './404.jsx'
 
+//import test from './test.scss'
+// Stylesheets
+require('./test.scss');
+
 const Main = () => (
         <Container>
             <Switch>

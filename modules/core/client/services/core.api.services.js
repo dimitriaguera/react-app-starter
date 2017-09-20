@@ -1,12 +1,12 @@
 /**
  * Created by Dimitri Aguera on 12/09/2017.
  */
-import config from 'env/local-config'
+import config from 'env/config'
 import { CALL_API } from 'core/client/redux/middlewares/api'
 import { failureAPI } from 'core/client/redux/actions/api.actions'
 import { getLocalToken } from 'users/client/services/users.storage.services'
 
-const BASE_URL = config.app.api_base_url;
+const BASE_URL = config.api_base_url;
 
 /**
  * Check, build, and return a function

@@ -3,8 +3,10 @@
  */
 'use strict';
 
+const chalk = require('chalk');
+const dateFormat = require('dateformat');
 const path = require('path');
-const config = require('./env/local-config');
+const config = require('./env/config');
 const express = require('express');
 const morgan = require('morgan');
 const helmet = require('helmet');
@@ -13,12 +15,29 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const passport = require('passport');
 const moduleUser = require('../modules/users/server/config/strategy');
-const authorizeRoles = require('../modules/users/server/roles/role-authorize');
+
+/**
+ * Check basics needs on config file.
+ */
+module.exports.checkConfig = function() {
+
+    // Check if NODE_ENV is set.
+    if ( !process.env.NODE_ENV ) {
+
+        // If no NODE_ENV, default set to development.
+        console.error(chalk.red('WARNING: NODE_ENV is not defined! Set development environment by default'));
+        process.env.NODE_ENV = 'development';
+    }
+
+    // Check if secret word for JWT generation is different from vanilla.
+    if ( config.security.jwtSecret === 'SECRET' ) {
+        console.log(chalk.red('Hey bro! You have to change security jwtSecret word on config.js file....'));
+    }
+};
 
 /**
  * Set Application local variables
  */
-
 module.exports.initLocals = function(app) {
 
     app.locals.title = config.app.title;
@@ -26,7 +45,7 @@ module.exports.initLocals = function(app) {
     app.locals.keywords = config.app.keywords;
     app.locals.logo = config.app.logo;
     app.locals.favicon = config.app.favicon;
-    app.locals.env = process.env.NODE_ENV;
+    app.locals.env = config.env;
 
     // Passing the request url to environment locals
     app.use(function (req, res, next) {
@@ -64,7 +83,7 @@ module.exports.initMiddleware = function(app) {
 module.exports.initLogger = function(app) {
 
     // Morgan
-    app.use(morgan(config.app.logger));
+    app.use(morgan(config.logger));
 };
 
 /**
@@ -127,6 +146,8 @@ module.exports.startApp = function() {
 
     const app = express();
 
+    this.checkConfig();
+
     this.initLocals(app);
     this.initMiddleware(app);
     this.initDatabase(app);
@@ -135,9 +156,10 @@ module.exports.startApp = function() {
     this.initViewEngine(app);
     this.initRoutes(app);
 
-    app.listen(config.app.port);
+    app.listen(config.port);
 
-    console.log('SERVER STARTED');
+    console.log(chalk.yellow(`SERVER STARTED at ${dateFormat(new Date(), "isoDateTime")}`));
+    console.log(chalk.yellow(`MODE ---> ${process.env.NODE_ENV}`));
 
     return app;
 };
