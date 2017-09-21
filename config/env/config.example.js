@@ -44,15 +44,14 @@ module.exports = {
     logger: ':method :url :status :response-time ms - :res[content-length]',
     uploads: {},
 
-    seeds: {
+    seedDB: {
+        haveToSeed: false,
         collections: [{
             model: 'User',
             documents: [{
-                data: {
-                    username: 'admin',
-                    password: 'adminpwd',
-                    roles: ['ADMIN_ROLE', 'USER_ROLE']
-                }
+                username: 'admin',
+                password: 'adminpwd',
+                roles: ['ADMIN_ROLE', 'USER_ROLE']
             }]
         }]
     }

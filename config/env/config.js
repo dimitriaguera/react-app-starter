@@ -45,17 +45,13 @@ module.exports = {
     uploads: {},
 
     seedDB: {
-        haveToSeed: true,
+        haveToSeed: false,
         collections: [{
             model: 'User',
             documents: [{
                 username: 'admin',
                 password: 'adminpwd',
                 roles: ['ADMIN_ROLE', 'USER_ROLE']
-            },{
-                username: 'Dimitri',
-                password: 'dimitripwd',
-                roles: ['INVIT_ROLE', 'USER_ROLE']
             }]
         }]
     }

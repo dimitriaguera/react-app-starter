@@ -29,12 +29,12 @@ module.exports = {
         rules: [
             {
                 test: /\.js$/,
-                use: 'babel-loader',
+                use: ['babel-loader', 'import-glob'],
                 exclude: /node_modules/
             },
             {
                 test: /\.jsx$/,
-                use: 'babel-loader',
+                use: ['babel-loader', 'import-glob'],
                 exclude: /node_modules/
             },
             {
