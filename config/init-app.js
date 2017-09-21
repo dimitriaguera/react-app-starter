@@ -15,7 +15,10 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const passport = require('passport');
 const moduleUser = require('../modules/users/server/config/strategy');
+const seedDB = require('./seeds/seeds');
 
+
+console.log(seedDB);
 /**
  * Check basics needs on config file.
  */
@@ -157,6 +160,8 @@ module.exports.startApp = function() {
     this.initRoutes(app);
 
     app.listen(config.port);
+
+    seedDB.populate();
 
     console.log(chalk.yellow(`SERVER STARTED at ${dateFormat(new Date(), "isoDateTime")}`));
     console.log(chalk.yellow(`MODE ---> ${process.env.NODE_ENV}`));
