@@ -54,7 +54,9 @@ module.exports = {
                 roles: ['ADMIN_ROLE', 'USER_ROLE']
             }]
         }]
-    }
+    },
+
+    getEnv: () => process.env.NODE_ENV,
 };
 
 

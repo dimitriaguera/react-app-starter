@@ -24,13 +24,15 @@ export function isAuthenticated() {
  * @param roles
  * @returns {*}
  */
-export function allowDisplayItem ( item, user, roles ) {
-    if ( !user )
-        return null;
-    if ( !roles )
-        return item();
+export function allowDisplayItem ( user, roles ) {
 
-    return hasRole(user, roles) ? item() : null;
+    if ( !user )
+        return false;
+
+    if ( !roles )
+        return true;
+
+    return hasRole(user, roles);
 }
 
 

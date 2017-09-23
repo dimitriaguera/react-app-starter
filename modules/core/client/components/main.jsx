@@ -19,7 +19,7 @@ class Main extends Component {
         const { routes } = this.state;
 
         return (
-            <Container>
+            <Container style={{paddingTop:'80px'}}>
                 <Switch>
                     {routes}
                     <Route component={NotFound} />

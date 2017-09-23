@@ -18,7 +18,3 @@ export const getRoutes = function() {
     });
     return routes;
 };
-
-export const getMenuLink = function() {
-
-};

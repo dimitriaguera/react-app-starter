@@ -54,7 +54,9 @@ module.exports = {
                 roles: ['ADMIN_ROLE', 'USER_ROLE']
             }]
         }]
-    }
+    },
+
+    env: process.env.NODE_ENV || 'development',
 };
 
 

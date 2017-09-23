@@ -17,8 +17,6 @@ const passport = require('passport');
 const moduleUser = require('../modules/users/server/config/strategy');
 const seedDB = require('./seeds/seeds');
 
-
-console.log(seedDB);
 /**
  * Check basics needs on config file.
  */

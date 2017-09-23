@@ -4,12 +4,14 @@
 import React from 'react'
 import Header from './header.jsx'
 import Main from './main.jsx'
+import Loader from './loader.jsx'
 
 const App = () => (
 
     <div>
         <Header />
         <Main />
+        <Loader />
     </div>
 );
 

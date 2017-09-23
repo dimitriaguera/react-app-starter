@@ -18,6 +18,7 @@ module.exports = {
         filename: 'bundle.js'
     },
     resolve: {
+        extensions: ['.js', '.jsx'],
         modules: [
             path.resolve(__dirname, 'modules'),
             path.resolve(__dirname, 'config'),

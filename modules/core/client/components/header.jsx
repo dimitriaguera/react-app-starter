@@ -1,73 +1,67 @@
-import React from 'react'
+import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Link } from 'react-router-dom'
-import { Dropdown, Menu, Loader } from 'semantic-ui-react'
+import { Menu } from 'semantic-ui-react'
 import { logoutUser } from 'users/client/redux/actions'
 import { allowDisplayItem } from 'users/client/services/users.auth.services'
-import { ADMIN_ROLE, USER_ROLE, INVITE_ROLE } from 'users/commons/roles'
+import { getMenuLink } from 'core/client/services/core.menu.services'
 
-const Header = ({ isAuthenticated, user, logoutHandler, loading, fetching }) => {
+class Header extends Component {
 
-    const homeItem = () => <Menu.Item as={Link} to='/'>Home</Menu.Item>;
-    const usersItem = () => <Menu.Item as={Link} to='/users'>Users</Menu.Item>;
-    const loginItem = () => (
-        <Menu.Menu position='right'>
-            <Menu.Item as={Link} to='/Login'>Login</Menu.Item>
-        </Menu.Menu>
-    );
+    constructor() {
+        super();
+        this.state = {
+            menuItems: getMenuLink(),
+        }
+    }
 
-    const accountItem = () => (
-        <Menu.Menu position='right'>
-            <Dropdown text={user.username} pointing className='link item'>
-                <Dropdown.Menu>
-                    <Dropdown.Item as={Link} to='/account'>My account</Dropdown.Item>
-                    <Dropdown.Divider />
-                    <Dropdown.Item as="a" href='#' onClick={ logoutHandler }>Logout</Dropdown.Item>
-                </Dropdown.Menu>
-            </Dropdown>
-        </Menu.Menu>
-    );
+    render() {
 
-    return (
-        <header>
-            <Menu as='nav' stackable>
+        const { user } = this.props;
+        const { menuItems } = this.state;
 
-              {/* Static links */}
-              {homeItem()}
-
-                {/* Authorized policies links */}
-              {allowDisplayItem(usersItem, user, [ADMIN_ROLE])}
-              {allowDisplayItem(accountItem, user)}
-
-              {/* Conditional links */}
-              {!isAuthenticated && loginItem()}
-
-            </Menu>
-            <Loader active={loading || fetching}/>
-        </header>
-)};
+        return (
+            <header>
+                <Menu as='nav' fixed='top'>
+                    {buildMenuItems( menuItems, user )}
+                </Menu>
+            </header>
+        )
+    }
+}
 
 const mapStateToProps = state => {
     return {
-        isAuthenticated: state.authenticationStore.isAuthenticated,
         user: state.authenticationStore._user,
-        loading: state.apiStore.isFetching,
-        fetching: state.authenticationStore.isFetching,
-    }
-};
-
-const mapDispatchToProps = ( dispatch ) => {
-    return {
-        logoutHandler: e => {
-            e.preventDefault();
-            dispatch(logoutUser());
-        }
     }
 };
 
 const HeaderContainer = connect(
     mapStateToProps,
-    mapDispatchToProps
+    null
 )(Header);
+
+
+// HELPER
+function buildMenuItems( items, user ) {
+    console.log('render header');
+
+    return items.map( (item, i) => {
+
+        const { component:Component, isPrivate, hiddenOnAuth, roles } = item;
+
+        // Hide elements if authenticated.
+        if ( hiddenOnAuth && user ) {
+            return null;
+        }
+        // Hide elements if non-authenticated or roles no match.
+        else if ( isPrivate && !allowDisplayItem( user, roles )) {
+            return null;
+        }
+        // Else, render menu entry element.
+        else {
+            return <Component key={i} />;
+        }
+    });
+}
 
 export default HeaderContainer
