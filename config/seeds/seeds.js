@@ -8,12 +8,9 @@ const chalk = require('chalk');
 const mongoose = require('mongoose');
 const config = require('../env/config');
 const User = require(path.resolve('./modules/users/server/models/users.server.models.js'));
-const Test = require(path.resolve('./modules/users/server/models/test.server.models.js'));
-
 
 const models = {
     User,
-    Test,
 };
 
 module.exports.populate = function() {
@@ -26,8 +23,6 @@ module.exports.populate = function() {
 
         const model = models[item.model];
         const documents = item.documents;
-
-        console.log(item.model);
 
         let it = 0;
 
