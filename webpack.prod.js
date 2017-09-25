@@ -18,19 +18,13 @@ const common = require('./webpack.default.js');
 
 
 module.exports = merge(common, {
+    output: {
+        path: path.resolve('public/dist'),
+        publicPath: "/static/dist/",
+        filename: '[hash].bundle.js'
+    },
     module: {
-
         rules: [
-            {
-                test: /\.js$/,
-                use: 'babel-loader',
-                exclude: /node_modules/
-            },
-            {
-                test: /\.jsx$/,
-                use: 'babel-loader',
-                exclude: /node_modules/
-            },
             {
                 test: /\.css$/,
                 use: ExtractTextPlugin.extract({
@@ -65,7 +59,7 @@ module.exports = merge(common, {
             }
         }),
         new ExtractTextPlugin({ // define where to save the file
-            filename: '[name].bundle.css',
+            filename: '[hash].[name].bundle.css',
             allChunks: true,
         }),
         new OptimizeCssAssetsPlugin({

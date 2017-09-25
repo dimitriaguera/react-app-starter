@@ -8,14 +8,11 @@ const path = require('path');
 
 // Plugins
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
     entry: {
         main: path.resolve(__dirname, 'modules/core/client/index.js'),
-    },
-    output: {
-        path: path.resolve('public/dist'),
-        filename: 'bundle.js'
     },
     resolve: {
         extensions: ['.js', '.jsx'],
@@ -28,6 +25,11 @@ module.exports = {
     module: {
 
         rules: [
+            {
+                test: /\.html$/,
+                use: ['pug-loader'],
+                exclude: /node_modules/
+            },
             {
                 test: /\.js$/,
                 use: ['babel-loader', 'import-glob'],
@@ -44,7 +46,9 @@ module.exports = {
                     loader:'file-loader',
                     options: {
                         limit: 100000,
-                        name: 'assets/font/[name].[hash:8].[ext]',
+                        //useRelativePath: true,
+                        publicPath: '',
+                        name: 'assets/[name].[hash:8].[ext]',
                     }
                 },
             },
@@ -55,7 +59,7 @@ module.exports = {
                         loader: 'url-loader',
                         options: {
                             limit: 8192,
-                            // path: '/images',
+                            //path: '',
                             name: 'images/[name].[hash:8].[ext]'
                         }
                     },
@@ -66,5 +70,17 @@ module.exports = {
     },
     plugins: [
         new CleanWebpackPlugin(['public/dist']),
+        new HtmlWebpackPlugin({
+            filename: 'index.server.views.html',
+            template: 'modules/core/server/views/index.server.views.html', // Load a custom template (ejs by default see the FAQ for details)
+        }),
+        new HtmlWebpackPlugin({
+            filename: '404.server.views.html',
+            template: 'modules/core/server/views/404.server.views.html', // Load a custom template (ejs by default see the FAQ for details)
+        }),
+        new HtmlWebpackPlugin({
+            filename: '500.server.views.html',
+            template: 'modules/core/server/views/500.server.views.html', // Load a custom template (ejs by default see the FAQ for details)
+        }),
     ],
 };

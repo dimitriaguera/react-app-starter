@@ -3,13 +3,9 @@
  */
 
 exports.index = function(req, res) {
-    res.render('./modules/core/server/views/index');
+    res.render('./public/dist/index');
 };
 
 exports.renderNotFound = function(req, res) {
-    // res.status(404).json({
-    //     success: false,
-    //     msg: 'File not found !'
-    // });
-    res.status(404).render('./modules/core/server/views/404');
+    res.status(404).render('./public/dist/404');
 };

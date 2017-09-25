@@ -6,51 +6,35 @@
  */
 
 // Plugins
-const StyleLintPlugin = require('stylelint-webpack-plugin');
+const path = require('path');
 
+const StyleLintPlugin = require('stylelint-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 const merge = require('webpack-merge');
 const common = require('./webpack.default.js');
 
 
 module.exports = merge(common, {
+    output: {
+        path: path.resolve('public/dist'),
+        publicPath: "/static/dist/",
+        filename: 'bundle.js'
+    },
     module: {
         rules: [
             {
-                test: /\.(ico|eot|otf|webp|ttf|woff|woff2)$/i,
-                use: {
-                    loader:'file-loader',
-                    options: {
-                        limit: 100000,
-                        name: 'assets/font/[name].[hash:8].[ext]',
-                    }
-                },
-            },
-            {
-                test: /\.(jpe?g|png|gif|svg)$/,
-                use: [
-                    {
-                        loader: 'url-loader',
-                        options: {
-                            limit: 8192,
-                            // path: '/images',
-                            name: 'images/[name].[hash:8].[ext]'
-                        }
-                    },
-                    'img-loader'
-                ]
-            },
-            {
                 test: /\.css$/,
-                use: [{
-                    loader: 'style-loader'
-                }, {
-                    loader: 'css-loader', options: {
-                        sourceMap: true
+                use: ExtractTextPlugin.extract({
+                    fallback: 'style-loader',
+                    use: [{
+                        loader: 'css-loader', options: {
+                            sourceMap: true
+                        }
                     }
-                }
-                    // , {loader: 'autoprefixer-loader'}
-                ]},
+                    ],
+                }),
+            },
             {
                 test: /\.scss$/,
                 use: [{
@@ -74,5 +58,9 @@ module.exports = merge(common, {
     },
     plugins: [
         new StyleLintPlugin({}),
+        new ExtractTextPlugin({ // define where to save the file
+            filename: '[name].bundle.css',
+            allChunks: true,
+        }),
     ],
 });
