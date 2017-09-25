@@ -181,9 +181,9 @@ class UserListItem extends Component {
                     <Button onClick={() => history.push('/user/edit/'+user.username)} basic color='grey' icon='setting' circular/>
                     {deleteButton()}
                 </List.Content>
-                <List.Header><Link to={`/user/${user.username}`}>{user.username}</Link></List.Header>
+                <List.Header as="h3"><Link to={`/user/${user.username}`}>{user.username}</Link></List.Header>
                 <List.Description>{roles}</List.Description>
-                <List.Description>{user.updated ? `Last update on ${dateFormat(new Date(user.updated), "dd mmm yyyy - H:MM:ss")}` : `Created on ${dateFormat(new Date(user.created), "dd mmm yyyy - H:MM:ss")}`}</List.Description>
+                <List.Description><span style={{color:'#21ba45'}}>{user.updated ? `Last update on ${dateFormat(new Date(user.updated), "dd mmm yyyy - H:MM:ss")}` : `Created on ${dateFormat(new Date(user.created), "dd mmm yyyy - H:MM:ss")}`}</span></List.Description>
             </List.Item>
         );
     }
