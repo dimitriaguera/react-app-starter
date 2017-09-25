@@ -54,7 +54,6 @@
     "react-router-dom": "^4.2.2",
     "redux": "^3.7.2",
     "redux-thunk": "^2.2.0",
-    "resolve-url-loader": "^2.1.0",
     "semantic-ui-css": "^2.2.12",
     "semantic-ui-react": "^0.73.0"
   },
@@ -84,6 +83,7 @@
     "stylelint-config-standard": "^17.0.0",
     "stylelint-webpack-plugin": "^0.9.0",
     "uglifyjs-webpack-plugin": "^0.4.6",
+    "url-loader": "^0.5.9",
     "webpack": "^3.6.0",
     "webpack-merge": "^4.1.0"
   }

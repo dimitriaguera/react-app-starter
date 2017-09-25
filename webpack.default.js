@@ -46,7 +46,6 @@ module.exports = {
                     loader:'file-loader',
                     options: {
                         limit: 100000,
-                        //useRelativePath: true,
                         publicPath: '',
                         name: 'assets/[name].[hash:8].[ext]',
                     }
@@ -72,15 +71,15 @@ module.exports = {
         new CleanWebpackPlugin(['public/dist']),
         new HtmlWebpackPlugin({
             filename: 'views/index.server.views.html',
-            template: 'modules/core/server/views/index.server.views.html', // Load a custom template (ejs by default see the FAQ for details)
+            template: 'modules/core/server/views/index.server.views.html',
         }),
         new HtmlWebpackPlugin({
             filename: 'views/404.server.views.html',
-            template: 'modules/core/server/views/404.server.views.html', // Load a custom template (ejs by default see the FAQ for details)
+            template: 'modules/core/server/views/404.server.views.html',
         }),
         new HtmlWebpackPlugin({
             filename: 'views/500.server.views.html',
-            template: 'modules/core/server/views/500.server.views.html', // Load a custom template (ejs by default see the FAQ for details)
+            template: 'modules/core/server/views/500.server.views.html',
         }),
     ],
 };
