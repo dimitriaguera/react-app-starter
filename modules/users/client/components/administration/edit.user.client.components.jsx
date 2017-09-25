@@ -4,7 +4,9 @@ import { put, get } from 'core/client/services/core.api.services'
 import { hasRole } from 'users/client/services/users.auth.services'
 import { getLocalToken } from 'users/client/services/users.storage.services'
 import { ALL_ROLE, ADMIN_ROLE, DEFAULT_AUTH_ROLE } from 'users/commons/roles'
-import { Form, Checkbox, Button, Header, Divider } from 'semantic-ui-react'
+import { Form, Checkbox, Button, Header, Divider, Message } from 'semantic-ui-react'
+
+import dateFormat from 'dateformat'
 
 class EditUser extends Component {
 
@@ -15,6 +17,7 @@ class EditUser extends Component {
         this.state = {
             user: null,
             formRoles: {},
+            errorUpdate: null,
         };
     }
 
@@ -27,6 +30,7 @@ class EditUser extends Component {
 
             const state = Object.assign( {}, prevState );
             state.formRoles[name] = value;
+            state.errorUpdate = null;
             return state;
         });
     }
@@ -61,13 +65,21 @@ class EditUser extends Component {
 
         this.props.updateUser( name, update )
             .then( (data) => {
-                _self.setState({user: _.merge( user, update )})
+                if ( !data.success ){
+                    return _self.setState({
+                        errorUpdate: true,
+                    })
+                }
+                _self.setState({
+                    user: _.merge( user, update ),
+                    errorUpdate: false,
+                })
             });
     }
 
     render(){
 
-        const { user } = this.state;
+        const { user, errorUpdate } = this.state;
         const { currentUser } = this.props;
 
         if ( !!user ) {
@@ -101,11 +113,25 @@ class EditUser extends Component {
                 );
             });
 
+            const renderMessage = () => {
+                if ( errorUpdate === null ) {
+                    return null;
+                }
+                else if ( errorUpdate ) {
+                    return <Message error content='Problem occurs during update. Please try again or contact administrator.'/>;
+                }
+                else {
+                    return <Message success content={`Changes successfully updated on ${dateFormat(new Date(), "dd mmm yyyy - H:MM:ss")}`}/>;
+                }
+            };
+
             // Render form.
             return (
                 <div>
                     <div>
                         <Header as="h1">Edit {user.username} account</Header>
+                        <Divider />
+                        {renderMessage()}
                         <Header as="h2">Authorizations</Header>
                         <Form onSubmit={this.handleUpdateUser}>
                             {rolesForm}

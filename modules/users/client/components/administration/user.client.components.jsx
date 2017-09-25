@@ -6,6 +6,8 @@ import { getLocalToken } from 'users/client/services/users.storage.services'
 import { getRoleNames } from 'users/client/services/users.auth.services'
 import { Divider } from 'semantic-ui-react'
 
+import dateFormat from 'dateformat'
+
 class User extends Component {
 
     constructor(){
@@ -50,9 +52,9 @@ class User extends Component {
                     <h3>Authorizations</h3>
                     <p>{rolesNames}</p>
                     <h3>Creation</h3>
-                    <p>{user.created}</p>
+                    <p>{dateFormat(new Date(user.created), "dd mmm yyyy - H:MM:ss")}</p>
                     <h3>Last update</h3>
-                    <p>{user.updated ? user.updated : 'never updated'}</p>
+                    <p>{user.updated ? dateFormat(new Date(user.updated), "dd mmm yyyy - H:MM:ss") : 'never updated'}</p>
                 </div>
              )}
             </div>

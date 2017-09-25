@@ -9,6 +9,8 @@ import { hasRole } from 'users/client/services/users.auth.services'
 import { setUsers } from 'users/client/redux/actions'
 import { List, Confirm, Button, Divider } from 'semantic-ui-react'
 
+import dateFormat from 'dateformat'
+
 class Users extends Component {
 
     constructor(){
@@ -181,7 +183,7 @@ class UserListItem extends Component {
                 </List.Content>
                 <List.Header><Link to={`/user/${user.username}`}>{user.username}</Link></List.Header>
                 <List.Description>{roles}</List.Description>
-                <List.Description>{user.updated ? `Last update on ${user.updated}` : `Created on ${user.created}`}</List.Description>
+                <List.Description>{user.updated ? `Last update on ${dateFormat(new Date(user.updated), "dd mmm yyyy - H:MM:ss")}` : `Created on ${dateFormat(new Date(user.created), "dd mmm yyyy - H:MM:ss")}`}</List.Description>
             </List.Item>
         );
     }
