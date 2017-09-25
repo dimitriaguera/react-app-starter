@@ -2,12 +2,12 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import update from 'immutability-helper'
-import { ADMIN_ROLE } from 'users/commons/roles'
+import { ADMIN_ROLE, ALL_ROLE } from 'users/commons/roles'
 import { get, put, del } from 'core/client/services/core.api.services'
 import { getLocalToken } from 'users/client/services/users.storage.services'
 import { hasRole } from 'users/client/services/users.auth.services'
 import { setUsers } from 'users/client/redux/actions'
-import { List, Confirm, Button } from 'semantic-ui-react'
+import { List, Confirm, Button, Divider } from 'semantic-ui-react'
 
 class Users extends Component {
 
@@ -92,6 +92,8 @@ class Users extends Component {
 
         return (
             <div>
+                <h1>All users</h1>
+                <Divider />
                 <List divided relaxed>
                     {userList}
                 </List>
@@ -141,9 +143,13 @@ class UserListItem extends Component {
 
     render() {
         const {user, index, handleOpen, history, currentUser} = this.props;
-        const roles = user.roles.reduce((a, b) => {
-            return `${a} ${b}`
-        }, '');
+        let roles = 'Authorizations : ';
+
+        for ( let i = 0; i < user.roles.length; i++ ) {
+            for ( let j = 0; j < ALL_ROLE.length; j++ ) {
+                if ( user.roles[i] === ALL_ROLE[j].id ) roles = `${roles} ${i !== 0 ? '/' : ' '} ${ALL_ROLE[j].name}`
+            }
+        }
 
         const deleteButton = () => {
             if ( hasRole(user, [ADMIN_ROLE]) && (currentUser.username === user.username) ) {
@@ -175,6 +181,7 @@ class UserListItem extends Component {
                 </List.Content>
                 <List.Header><Link to={`/user/${user.username}`}>{user.username}</Link></List.Header>
                 <List.Description>{roles}</List.Description>
+                <List.Description>{user.updated ? `Last update on ${user.updated}` : `Created on ${user.created}`}</List.Description>
             </List.Item>
         );
     }

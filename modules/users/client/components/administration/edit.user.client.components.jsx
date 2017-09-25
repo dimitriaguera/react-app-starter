@@ -4,7 +4,7 @@ import { put, get } from 'core/client/services/core.api.services'
 import { hasRole } from 'users/client/services/users.auth.services'
 import { getLocalToken } from 'users/client/services/users.storage.services'
 import { ALL_ROLE, ADMIN_ROLE, DEFAULT_AUTH_ROLE } from 'users/commons/roles'
-import { Form, Checkbox, Button } from 'semantic-ui-react'
+import { Form, Checkbox, Button, Header, Divider } from 'semantic-ui-react'
 
 class EditUser extends Component {
 
@@ -78,13 +78,13 @@ class EditUser extends Component {
                 let props = {};
 
                 // If default user role, can't be unchecked.
-                if (role === DEFAULT_AUTH_ROLE) {
+                if (role.id === DEFAULT_AUTH_ROLE.id) {
                     props.checked = true;
                     props.disabled = true;
                 }
 
                 // If user is currrent connected user and as admin role, can't be unchecked.
-                else if ( role === ADMIN_ROLE && hasRole(user, [role]) && (currentUser.username === user.username)) {
+                else if ( role.id === ADMIN_ROLE.id && hasRole(user, [role]) && (currentUser.username === user.username)) {
                     props.checked = true;
                     props.disabled = true;
                 }
@@ -96,7 +96,7 @@ class EditUser extends Component {
 
                 return (
                     <Form.Field key={index}>
-                        <Checkbox {...props} name={role} label={role} onChange={this.handleCheckChange}/>
+                        <Checkbox {...props} name={role.id} label={role.name} onChange={this.handleCheckChange}/>
                     </Form.Field>
                 );
             });
@@ -105,9 +105,11 @@ class EditUser extends Component {
             return (
                 <div>
                     <div>
-                        <h1>Edit {user.username} account</h1>
+                        <Header as="h1">Edit {user.username} account</Header>
+                        <Header as="h2">Authorizations</Header>
                         <Form onSubmit={this.handleUpdateUser}>
                             {rolesForm}
+                            <Divider />
                             <Button type='submit' content='Save' color='blue'/>
                         </Form>
                     </div>

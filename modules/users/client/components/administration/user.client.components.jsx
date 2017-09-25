@@ -3,6 +3,8 @@ import { connect } from 'react-redux'
 
 import { get } from 'core/client/services/core.api.services'
 import { getLocalToken } from 'users/client/services/users.storage.services'
+import { getRoleNames } from 'users/client/services/users.auth.services'
+import { Divider } from 'semantic-ui-react'
 
 class User extends Component {
 
@@ -10,6 +12,7 @@ class User extends Component {
         super();
         this.state = {
             user: null,
+            rolesNames: '',
         };
     }
 
@@ -25,19 +28,31 @@ class User extends Component {
 
                     return history.push('/not-found');
                 }
-                _self.setState({ user: data.msg })
+                _self.setState({
+                    user: data.msg,
+                    rolesNames: getRoleNames(data.msg.roles),
+                })
             });
     }
 
     render(){
 
-        const { user } = this.state;
+        const { user, rolesNames } = this.state;
 
         return (
             <div>
             { !!user && (
                 <div>
                     <h1>{user.username}'s User Page</h1>
+                    <Divider />
+                    <h3>Account name</h3>
+                    <p>{user.username}</p>
+                    <h3>Authorizations</h3>
+                    <p>{rolesNames}</p>
+                    <h3>Creation</h3>
+                    <p>{user.created}</p>
+                    <h3>Last update</h3>
+                    <p>{user.updated ? user.updated : 'never updated'}</p>
                 </div>
              )}
             </div>

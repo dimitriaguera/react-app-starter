@@ -84,7 +84,7 @@ export function logoutUser(){
 export function registerNewUser( creds ) {
     return dispatch => {
 
-        creds.roles = [DEFAULT_AUTH_ROLE];
+        creds.roles = [DEFAULT_AUTH_ROLE.id];
 
         // Request login on server.
         return dispatch(post('register', {

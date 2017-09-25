@@ -10,8 +10,11 @@ module.exports = function (...authorizedRoles) {
     return function (req, res, next) {
 
         const userRoles = req.user.roles;
+        const ids = [];
 
-        if (!_.intersection(userRoles, authorizedRoles).length) {
+        for ( let i = 0; i < authorizedRoles.length; i++ ) ids.push(authorizedRoles[i].id);
+
+        if (!_.intersection(userRoles, ids).length) {
             res.status(403);
             res.send('Not permitted with this role');
             return;

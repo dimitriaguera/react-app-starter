@@ -1,11 +1,12 @@
 /**
  * Created by Dimitri Aguera on 15/09/2017.
  */
-const ADMIN_ROLE = 'ADMIN_ROLE';
-const USER_ROLE = 'USER_ROLE';
-const INVIT_ROLE = 'INVIT_ROLE';
-const DEFAULT_AUTH_ROLE = 'USER_ROLE';
-const MARC_ROLE = 'MARC_ROLE';
+const ADMIN_ROLE = {id: 'ADMIN_ROLE', name: 'admin'};
+const USER_ROLE = {id: 'USER_ROLE', name: 'user'};
+const INVIT_ROLE = {id: 'INVIT_ROLE', name: 'invit'};
+const MARC_ROLE = {id: 'MARC_ROLE', name: 'marc'};
+
+const DEFAULT_AUTH_ROLE = USER_ROLE;
 
 module.exports = {
     ADMIN_ROLE: ADMIN_ROLE,
