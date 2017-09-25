@@ -145,7 +145,7 @@ class UserListItem extends Component {
 
     render() {
         const {user, index, handleOpen, history, currentUser} = this.props;
-        let roles = 'Authorizations : ';
+        let roles = '';
 
         for ( let i = 0; i < user.roles.length; i++ ) {
             for ( let j = 0; j < ALL_ROLE.length; j++ ) {
