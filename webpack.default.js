@@ -71,15 +71,15 @@ module.exports = {
     plugins: [
         new CleanWebpackPlugin(['public/dist']),
         new HtmlWebpackPlugin({
-            filename: 'index.server.views.html',
+            filename: 'views/index.server.views.html',
             template: 'modules/core/server/views/index.server.views.html', // Load a custom template (ejs by default see the FAQ for details)
         }),
         new HtmlWebpackPlugin({
-            filename: '404.server.views.html',
+            filename: 'views/404.server.views.html',
             template: 'modules/core/server/views/404.server.views.html', // Load a custom template (ejs by default see the FAQ for details)
         }),
         new HtmlWebpackPlugin({
-            filename: '500.server.views.html',
+            filename: 'views/500.server.views.html',
             template: 'modules/core/server/views/500.server.views.html', // Load a custom template (ejs by default see the FAQ for details)
         }),
     ],

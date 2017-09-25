@@ -3,9 +3,9 @@
  */
 
 exports.index = function(req, res) {
-    res.render('./public/dist/index');
+    res.render('./public/dist/views/index');
 };
 
 exports.renderNotFound = function(req, res) {
-    res.status(404).render('./public/dist/404');
+    res.status(404).render('./public/dist/views/404');
 };
