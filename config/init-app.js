@@ -16,6 +16,8 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 const moduleUser = require('../modules/users/server/config/strategy');
 const seedDB = require('./seeds/seeds');
+const http = require('http');
+const socketServer = require('socket.io');
 
 /**
  * Check basics needs on config file.
@@ -138,6 +140,30 @@ module.exports.initRoutes = function(app) {
 
 };
 
+/**
+ * Connect Socket.io to server.
+ */
+module.exports.socketConnect = function(app) {
+
+    const serve = http.createServer(app);
+    const io = socketServer(serve);
+
+    io.on('connection', ( socket ) => {
+
+        console.log(chalk.blue(`CONNECTED to socket ${socket.id}`));
+
+        socket.on('disconnect', function(){
+            console.log(chalk.blue(`DISCONNECTED to socket ${socket.id}`));
+        });
+
+        socket.on('test', (data, callback) => {
+            console.log(chalk.blue(`socket receive event TEST with data ${data}`));
+        });
+    })
+
+    return serve;
+};
+
 
 /**
  * Main initialisation
@@ -157,12 +183,15 @@ module.exports.startApp = function() {
     this.initViewEngine(app);
     this.initRoutes(app);
 
-    app.listen(config.port);
+    const serve = this.socketConnect(app);
+
+    serve.listen(config.port);
 
     seedDB.populate();
 
     console.log(chalk.yellow(`SERVER STARTED at ${dateFormat(new Date(), "isoDateTime")}`));
     console.log(chalk.yellow(`MODE ---> ${process.env.NODE_ENV}`));
+    console.log(chalk.blue(`SOCKET listening`));
 
-    return app;
+    return serve;
 };
