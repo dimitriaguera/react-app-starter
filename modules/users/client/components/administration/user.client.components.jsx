@@ -5,7 +5,6 @@ import { get } from 'core/client/services/core.api.services'
 import { getLocalToken } from 'users/client/services/users.storage.services'
 import { getRoleNames } from 'users/client/services/users.auth.services'
 import { Divider } from 'semantic-ui-react'
-import io from 'socket.io-client'
 
 import dateFormat from 'dateformat'
 
@@ -13,16 +12,10 @@ class User extends Component {
 
     constructor(){
         super();
-        this.socket = io.connect("http://localhost:3000");
         this.state = {
             user: null,
             rolesNames: '',
         };
-    }
-
-    componentWillUnmount() {
-        this.socket.disconnect();
-        console.log("Disconnecting Socket as component will unmount");
     }
 
     // Request user to server.

@@ -8,6 +8,7 @@ import { getLocalToken } from 'users/client/services/users.storage.services'
 import { hasRole } from 'users/client/services/users.auth.services'
 import { setUsers } from 'users/client/redux/actions'
 import { List, Confirm, Button, Divider } from 'semantic-ui-react'
+import socketServices from 'core/client/services/core.socket.services'
 
 import dateFormat from 'dateformat'
 
@@ -15,6 +16,7 @@ class Users extends Component {
 
     constructor(){
         super();
+        this.socket = socketServices.getPrivateSocket();
         this.handleOpen = this.handleOpen.bind(this);
         this.handleCancel = this.handleCancel.bind(this);
         this.handleConfirm = this.handleConfirm.bind(this);
@@ -31,11 +33,26 @@ class Users extends Component {
     // Request API server on mounting component.
     componentWillMount(){
         const _self = this;
+
+        // Fetch users.
         this.props.fetchUsers().then( (data) => {
             if (data.success) {
                 _self.setState({users: data.msg})
             }
         });
+
+        // Update users list with Socket.io
+        this.socket.on('save:user', (data) => {
+            const users = _self.state.users.slice(0);
+            users.push(data);
+            _self.setState({ users: users })
+        });
+    }
+
+    // On unmount component, disconnect Socket.io.
+    componentWillUnmount() {
+        this.socket.disconnect();
+        console.log("Disconnecting Socket as component will unmount");
     }
 
     // Handle func when open Confirm Box.

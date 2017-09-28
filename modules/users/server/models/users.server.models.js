@@ -10,6 +10,8 @@ const Promise = require('bluebird');
 const path = require('path');
 const config = require(path.resolve('./config/env/config'));
 
+const socketsEvents = require('../../../../config/sockets/sockets.conf');
+
 
 /**
  * From MEAN JS.
@@ -75,6 +77,15 @@ UserSchema.pre('save', function (next) {
     } else {
         return next();
     }
+});
+
+/**
+ * Handle for sockets.
+ *
+ */
+UserSchema.post('save', function( doc ) {
+    console.log('save post middleware called on User Model');
+    socketsEvents.emit( 'save:user', doc );
 });
 
 /**

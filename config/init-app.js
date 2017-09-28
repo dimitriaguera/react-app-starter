@@ -18,6 +18,7 @@ const moduleUser = require('../modules/users/server/config/strategy');
 const seedDB = require('./seeds/seeds');
 const http = require('http');
 const socketServer = require('socket.io');
+const socketsEvents = require('./sockets/sockets.conf');
 
 /**
  * Check basics needs on config file.
@@ -148,18 +149,7 @@ module.exports.socketConnect = function(app) {
     const serve = http.createServer(app);
     const io = socketServer(serve);
 
-    io.on('connection', ( socket ) => {
-
-        console.log(chalk.blue(`CONNECTED to socket ${socket.id}`));
-
-        socket.on('disconnect', function(){
-            console.log(chalk.blue(`DISCONNECTED to socket ${socket.id}`));
-        });
-
-        socket.on('test', (data, callback) => {
-            console.log(chalk.blue(`socket receive event TEST with data ${data}`));
-        });
-    })
+    require('../modules/users/server/sockets/users.server.sockets')( socketsEvents, io );
 
     return serve;
 };
