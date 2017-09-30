@@ -16,6 +16,7 @@ module.exports = {
 
     port: process.env.PORT || '3000',
     host: process.env.HOST || 'localhost',
+    protocol: process.env.PROTOCOL || 'http',
     domain: process.env.DOMAIN,
 
     api_base_url: '/api/',

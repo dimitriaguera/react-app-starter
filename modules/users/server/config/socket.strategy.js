@@ -3,7 +3,7 @@
  */
 'use strict';
 const jwt = require('jsonwebtoken');
-const authorizedRoles = require('../roles/socket-role-authorize');
+const authorizedRoles = require('../roles/socket.role.authorize');
 const path = require('path');
 const config = require(path.resolve('./config/env/config'));
 const User = require('../models/users.server.models');

@@ -14,7 +14,7 @@ const compression = require('compression');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const passport = require('passport');
-const moduleUser = require('../modules/users/server/config/strategy');
+const moduleUser = require('../modules/users/server/config/passport.strategy');
 const seedDB = require('./seeds/seeds');
 const http = require('http');
 const socketServer = require('socket.io');
@@ -136,7 +136,7 @@ module.exports.initRoutes = function(app) {
     app.use('/static', express.static(path.resolve('./public')));
 
     // Modules routes
-    require('../modules/users/server/routes/auth.server.routes')(app);
+    require('../modules/users/server/routes/users.server.routes')(app);
     require('../modules/core/server/routes/core.server.routes')(app);
 
 };

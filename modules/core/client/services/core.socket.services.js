@@ -24,7 +24,12 @@ const socketService = {
         };
 
         // Try to connect.
-        const socket = io.connect( url + nsp, options );
+        const socket = io.connect(url + nsp, options);
+
+        // Catch error on client side connexion request.
+        socket.on('connect_error', function(err) {
+            console.log('Connexion error : ', err);
+        });
 
         // Catch error send by server.
         socket.on('error', function(err) {

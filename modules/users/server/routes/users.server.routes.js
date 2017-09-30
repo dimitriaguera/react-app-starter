@@ -5,7 +5,7 @@
 'use strict';
 
 const passport = require('passport');
-const authorizeRoles = require('../roles/role-authorize');
+const authorizeRoles = require('../roles/route.role.authorize');
 const { ADMIN_ROLE } = require('../../commons/roles');
 
 

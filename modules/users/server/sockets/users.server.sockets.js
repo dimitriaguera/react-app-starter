@@ -11,10 +11,10 @@ module.exports = function ( socketsEvents, io ) {
     const nsp = io.of('/private');
 
     // Protect this namespace.
-    nsp.use(socketStrategy(ADMIN_ROLE));
+    nsp.use( socketStrategy(ADMIN_ROLE) );
 
     // Apply messages.
-    nsp.on('connection', messages);
+    nsp.on( 'connection', messages );
 
     // Register events.
     socketsEvents.register( 'save:user', ( data ) => {
