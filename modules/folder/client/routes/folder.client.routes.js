@@ -1,15 +1,15 @@
 /**
  * Created by Dimitri Aguera on 21/09/2017.
  */
-import Home from 'home/client/components/home.client.components.jsx';
+import Folder from 'folder/client/components/folder.client.components.jsx';
 
 export const routes = [
     {
         private: false,
         route: {
-            path: '/',
+            path: '/folder',
             exact: true,
-            component: Home,
+            component: Folder,
         },
     },
 ];

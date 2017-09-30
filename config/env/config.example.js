@@ -20,6 +20,7 @@ module.exports = {
     domain: process.env.DOMAIN,
 
     api_base_url: '/api/',
+    folder_base_url: '',
 
     db: {
         client: 'mongodb',
