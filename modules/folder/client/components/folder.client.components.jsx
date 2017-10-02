@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { get } from 'core/client/services/core.api.services'
 import { List, Divider, Button, Icon, Breadcrumb } from 'semantic-ui-react'
+import Audio from 'music/client/components/audio.client.components'
+import { addPlaylistItem } from 'music/client/redux/actions'
 
 class Folder extends Component {
 
@@ -12,6 +14,8 @@ class Folder extends Component {
         this.state = {
             path: [],
             folder: [],
+            error: false,
+            srcReading: false
         };
     }
 
@@ -21,8 +25,14 @@ class Folder extends Component {
         const { fetchFolder } = this.props;
 
         fetchFolder().then((data) => {
-            if ( data.success ){
-                _self.setState({folder: data.msg});
+            if ( !data.success ) {
+                _self.setState({ error: true });
+            }
+            else {
+                _self.setState({
+                    error: false,
+                    folder: data.msg
+                });
             }
         });
     }
@@ -31,13 +41,16 @@ class Folder extends Component {
 
         return (e) => {
 
-            console.log(path);
             const _self = this;
             const {fetchFolder} = this.props;
 
-            fetchFolder(buildPath(path)).then((data) => {
-                if (data.success) {
+            fetchFolder( buildPath(path) ).then((data) => {
+                if ( !data.success ) {
+                    _self.setState({ error: true });
+                }
+                else {
                     _self.setState({
+                        error: false,
                         path: path,
                         folder: data.msg
                     });
@@ -55,8 +68,12 @@ class Folder extends Component {
         const path = this.state.path.slice(0, -1);
 
         fetchFolder( buildPath(path) ).then((data) => {
-            if ( data.success ){
+            if ( !data.success ) {
+                _self.setState({ error: true });
+            }
+            else {
                 _self.setState({
+                    error: false,
                     path: path,
                     folder: data.msg
                 });
@@ -66,30 +83,53 @@ class Folder extends Component {
         e.preventDefault();
     }
 
+    handlerReadFile( item, path ) {
+
+        const _self = this;
+        return (e) => {
+            _self.setState({srcReading: buildPath(path), itemReading: item});
+            e.preventDefault();
+        }
+    }
+
+    handlerAddItem( item, path ) {
+        return ( e ) => {
+            this.props.addPlaylistItem({ item:item, path:path });
+        }
+    }
+
     render(){
 
-        const { folder, path } = this.state;
+        const { folder, path, error, srcReading, itemReading } = this.state;
         const bread = buildBread(path, this.handlerOpenFolder);
 
         const Bread = () => (
             <Breadcrumb divider='/' sections={bread} />
         );
 
-        const folderList = folder.map( ( item, index )=> {
+        const folderList = folder.map( ( item, i )=> {
+
             let nextPath = path.slice(0);
             nextPath.push(item.name);
+            const stringPath = buildPath(nextPath);
+
+            const handlerClick = item.isFile ?
+                this.handlerReadFile( item, nextPath ) :
+                this.handlerOpenFolder( nextPath );
+
             return (
-                <List.Item key={index} onClick={this.handlerOpenFolder(nextPath)}>
-                    <List.Icon name={item.isFile?'file outline':'folder'} verticalAlign='middle' />
-                    <List.Content>
-                        <List.Header as='a'>{item.name}</List.Header>
-                    </List.Content>
-                </List.Item>
+                <FolderItemList key={i}
+                                item={item}
+                                path={stringPath}
+                                onClick={handlerClick}
+                                addItem={this.handlerAddItem(item, stringPath)}
+                />
             );
         });
 
         return (
             <div>
+                <Audio visibility={!!srcReading} item={itemReading} src={srcReading}/>
                 <h1>Folder</h1>
                 <Divider/>
                 <Button circular size="small" color="grey" basic disabled={!path.length} onClick={this.handlerPrevFolder} icon>
@@ -98,7 +138,7 @@ class Folder extends Component {
                 <Bread/>
 
                 <List divided relaxed>
-                    {folderList}
+                    {!error ? folderList : `Can't read root folder`}
                 </List>
             </div>
         );
@@ -110,6 +150,9 @@ const mapDispatchToProps = dispatch => {
         fetchFolder: ( query ) => dispatch(
             get( `folder?path=${query || ''}` )
         ),
+        addPlaylistItem: ( item ) => dispatch(
+            addPlaylistItem( item )
+        ),
     }
 };
 
@@ -119,6 +162,25 @@ const FolderContainer = connect(
 )(Folder);
 
 
+
+const FolderItemList = ({ onClick, item, addItem }) => {
+
+    return (
+        <List.Item>
+            {item.isFile && (
+            <List.Content floated='right'>
+                <Button onClick={addItem} icon>
+                    <Icon name='plus' />
+                </Button>
+            </List.Content>
+            )}
+            <List.Icon name={item.isFile?'file outline':'folder'} verticalAlign='middle' />
+            <List.Content onClick={onClick}>
+                <List.Header as='a'>{item.name}</List.Header>
+            </List.Content>
+        </List.Item>
+    );
+};
 
 
 

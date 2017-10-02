@@ -14,13 +14,13 @@ exports.open = function (req, res) {
     const query = req.query.path;
     const path = `${drive}/${query}`;
 
-    console.log(path);
-    console.log(process.env);
+    //console.log(path);
+    //console.log(process.env);
 
     fs.readdir( path, ( err, dir ) => {
 
-        if (err) {
-            console.log(err);
+        if ( err ) {
+            console.log(err.message);
             return res.status(401).json({
                     success: false,
                     msg: 'Folder not found',
@@ -31,29 +31,31 @@ exports.open = function (req, res) {
 
             fs.lstat( `${path}/${item}`, (err, stats) => {
 
-                if( err ) return res.status(401).json({
-                        success: false,
-                        msg: `Can't read file : ${path}/${item}`,
-                        err: err,
-                    });
-                callback( err, {
-                    isFile: stats.isFile(),
-                    name: item,
-                });
+                let result = {};
+
+                if( !err ) {
+                    result = {
+                        authorized: true,
+                        isFile: stats.isFile(),
+                        name: item,
+                    };
+                }
+
+                return callback( err, result );
+
             });
 
-        }, function(err, results){
-            // results is now an array of stats for each file
+        }, function( err, results ){
 
-            if (err) {
-                console.log(err);
-                return res.status(401).json({
+            if ( err ) {
+                console.log( err.message );
+                return res.json({
                     success: false,
-                    msg: 'Folder not found',
+                    msg: err.message,
                 });
             }
 
-            res.json({
+            return res.json({
                 success: true,
                 msg: results,
             });
