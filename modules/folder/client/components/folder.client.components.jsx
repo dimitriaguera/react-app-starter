@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { get } from 'core/client/services/core.api.services'
 import { List, Divider, Button, Icon, Breadcrumb } from 'semantic-ui-react'
 import Audio from 'music/client/components/audio.client.components'
-import { addPlaylistItem } from 'music/client/redux/actions'
+import { playItem, addPlaylistItem } from 'music/client/redux/actions'
 
 class Folder extends Component {
 
@@ -85,22 +85,35 @@ class Folder extends Component {
 
     handlerReadFile( item, path ) {
 
-        const _self = this;
+        const play = {
+            name: item.name,
+            src: path,
+        };
+
+        console.log(play);
+
         return (e) => {
-            _self.setState({srcReading: buildPath(path), itemReading: item});
+            this.props.readFile( play );
             e.preventDefault();
         }
     }
 
     handlerAddItem( item, path ) {
-        return ( e ) => {
-            this.props.addPlaylistItem({ item:item, path:path });
+
+        const play = {
+            name: item.name,
+            src: path,
+        };
+
+        return (e) => {
+            this.props.addPlaylistItem( play );
+            e.preventDefault();
         }
     }
 
     render(){
 
-        const { folder, path, error, srcReading, itemReading } = this.state;
+        const { folder, path, error } = this.state;
         const bread = buildBread(path, this.handlerOpenFolder);
 
         const Bread = () => (
@@ -114,7 +127,7 @@ class Folder extends Component {
             const stringPath = buildPath(nextPath);
 
             const handlerClick = item.isFile ?
-                this.handlerReadFile( item, nextPath ) :
+                this.handlerReadFile( item, stringPath ) :
                 this.handlerOpenFolder( nextPath );
 
             return (
@@ -129,7 +142,6 @@ class Folder extends Component {
 
         return (
             <div>
-                <Audio visibility={!!srcReading} item={itemReading} src={srcReading}/>
                 <h1>Folder</h1>
                 <Divider/>
                 <Button circular size="small" color="grey" basic disabled={!path.length} onClick={this.handlerPrevFolder} icon>
@@ -152,6 +164,9 @@ const mapDispatchToProps = dispatch => {
         ),
         addPlaylistItem: ( item ) => dispatch(
             addPlaylistItem( item )
+        ),
+        readFile: ( item ) => dispatch(
+            playItem( item )
         ),
     }
 };
