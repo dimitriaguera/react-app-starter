@@ -3,11 +3,17 @@
  */
 import { post } from 'core/client/services/core.api.services'
 
-
-export const ADD_PLAYLIST_ITEM = 'ADD_PLAYLIST_ITEM';
 export const ADD_PLAYLIST = 'ADD_PLAYLIST';
+export const ACTIVATE_PLAYLIST = 'ACTIVATE_PLAYLIST';
 export const PLAY_ITEM = 'PLAY_ITEM';
 
+
+export const activatePlaylist = ( item ) => {
+    return {
+        type: ACTIVATE_PLAYLIST,
+        item: item
+    }
+};
 
 export const playItem = ( item ) => {
    return {
@@ -16,9 +22,3 @@ export const playItem = ( item ) => {
    }
 };
 
-export const addPlaylistItem = ( item ) => {
-    return {
-        type: ADD_PLAYLIST_ITEM,
-        item: item
-    }
-};

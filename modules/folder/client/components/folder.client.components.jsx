@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { get } from 'core/client/services/core.api.services'
 import { List, Divider, Button, Icon, Breadcrumb } from 'semantic-ui-react'
-import Audio from 'music/client/components/audio.client.components'
-import { playItem, addPlaylistItem } from 'music/client/redux/actions'
+import { get, put } from 'core/client/services/core.api.services'
+import { playItem, activatePlaylist } from 'music/client/redux/actions'
+import SelectPlaylist from 'music/client/components/selectPlaylist.client.components'
 
 class Folder extends Component {
 
@@ -15,7 +15,6 @@ class Folder extends Component {
             path: [],
             folder: [],
             error: false,
-            srcReading: false
         };
     }
 
@@ -90,8 +89,6 @@ class Folder extends Component {
             src: path,
         };
 
-        console.log(play);
-
         return (e) => {
             this.props.readFile( play );
             e.preventDefault();
@@ -106,7 +103,10 @@ class Folder extends Component {
         };
 
         return (e) => {
-            this.props.addPlaylistItem( play );
+            const pl = this.props.activePlaylist;
+            const tracks = pl.tracks.concat([play]);
+
+            this.props.updatePlaylistItem( pl.title, tracks );
             e.preventDefault();
         }
     }
@@ -144,6 +144,7 @@ class Folder extends Component {
             <div>
                 <h1>Folder</h1>
                 <Divider/>
+                <SelectPlaylist />
                 <Button circular size="small" color="grey" basic disabled={!path.length} onClick={this.handlerPrevFolder} icon>
                     <Icon name='arrow left' />
                 </Button>
@@ -157,13 +158,29 @@ class Folder extends Component {
     }
 }
 
+const mapStateToProps = state => {
+    return {
+        activePlaylist: state.playlistStore.activePlaylist,
+    }
+};
+
 const mapDispatchToProps = dispatch => {
     return {
         fetchFolder: ( query ) => dispatch(
             get( `folder?path=${query || ''}` )
         ),
-        addPlaylistItem: ( item ) => dispatch(
-            addPlaylistItem( item )
+        updatePlaylistItem: ( title, items ) => dispatch(
+
+            put( `playlist/${title}`, {
+                data: {tracks: items},
+                types: {
+                    HOOK_TYPE: ( data ) => {
+                        return dispatch => {
+                            dispatch(activatePlaylist(data.msg))
+                        }
+                    },
+                }
+            } )
         ),
         readFile: ( item ) => dispatch(
             playItem( item )
@@ -172,7 +189,7 @@ const mapDispatchToProps = dispatch => {
 };
 
 const FolderContainer = connect(
-    null,
+    mapStateToProps,
     mapDispatchToProps
 )(Folder);
 
@@ -184,7 +201,7 @@ const FolderItemList = ({ onClick, item, addItem }) => {
         <List.Item>
             {item.isFile && (
             <List.Content floated='right'>
-                <Button onClick={addItem} icon>
+                <Button onClick={addItem} icon basic size="mini" color="teal">
                     <Icon name='plus' />
                 </Button>
             </List.Content>

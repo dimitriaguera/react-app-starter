@@ -10,11 +10,28 @@ class Playlist extends Component {
     constructor( props ) {
         super( props );
         this.state = {
-            itemReading: {},
+            playlist: {
+                title: '',
+                tracks: [],
+            },
         }
     }
 
     componentWillMount() {
+        const _self = this;
+        const title = _self.props.match.params.title;
+        const { history } = _self.props;
+
+        this.props.getPlaylist(title)
+            .then( (data) => {
+                if ( !data.success ) {
+
+                    return history.push('/not-found');
+                }
+                _self.setState({
+                    playlist: data.msg,
+                })
+            });
     }
 
     handlerReadFile( item ) {
@@ -27,15 +44,16 @@ class Playlist extends Component {
 
     render(){
 
-        const { playlist } = this.props;
+        const { playlist } = this.state;
 
-        const itemsList = playlist.map( (item, i) => {
+        const itemsList = playlist.tracks.map( (item, i) => {
             return <PlaylistItem key={i} item={item} onPlay={this.handlerReadFile(item)} />
         });
 
         return (
             <div>
-                <h1>Playlist</h1>
+                <h5>Playlist</h5>
+                <h1>{playlist.title}</h1>
                 <Divider/>
                 <List divided relaxed>
                     {itemsList}
@@ -47,12 +65,14 @@ class Playlist extends Component {
 
 const mapStateToProps = state => {
     return {
-        playlist: state.playlistStore.list,
     }
 };
 
 const mapDispatchToProps = dispatch => {
     return {
+        getPlaylist: ( title ) => dispatch(
+            get( `playlist/${title}` )
+        ),
         addPlaylistItem: ( item ) => dispatch(
             addPlaylistItem( item )
         ),

@@ -6,6 +6,8 @@ const path = require('path');
 const config = require(path.resolve('./config/env/config'));
 const readChunk = require('read-chunk');
 const fileType = require('file-type');
+const Playlist = require('../models/music.server.models');
+
 
 exports.read = function (req, res) {
 
@@ -53,5 +55,103 @@ exports.read = function (req, res) {
     audio.on('end', () => {
         console.log('END EVENT');
         res.end('Goodbye');
+    });
+};
+
+exports.create = function (req, res) {
+
+    const { title } = req.body;
+    const newPl = new Playlist({
+        title: title,
+    });
+
+    newPl.save((err) => {
+        if (err) {
+            return res.json({
+                success: false,
+                msg: err.message,
+            });
+        }
+        res.json({
+            success: true,
+            msg: 'Successful created new playlist.'
+        });
+    });
+};
+
+
+exports.playlist = function (req, res) {
+    const pl = req.model;
+    if (!pl) {
+        return res.status(401).json({
+            success: false,
+            msg: 'Playlist no found'});
+    }
+    res.json({
+        success: true,
+        msg: pl
+    });
+};
+
+exports.allPlaylist = function (req, res) {
+
+    Playlist.find({}).exec(function(err, pls){
+        if (err) {
+            return res.status(422).json({
+                success: false, msg: err.name
+            });
+        }
+        res.json({
+            success: true,
+            msg: pls
+        });
+    });
+};
+
+exports.update = function (req, res) {
+
+    const pl = req.model;
+
+    // Update playlist consist on adding or deleting tracks.
+    if ( req.body.tracks ) pl.tracks = req.body.tracks;
+
+    pl.save( function(err){
+        if (err) {
+            return res.status(422).json({
+                success: false,
+                msg: err
+            });
+        }
+        res.json({
+            success: true,
+            msg: pl
+        });
+    });
+};
+
+exports.delete = function (req, res) {
+    const pl = req.model;
+    Playlist.remove(function(err){
+        if (err) {
+            return res.status(422).json({
+                success: false,
+                msg: err
+            });
+        }
+        res.json({
+            success: true,
+            msg: pl
+        });
+    });
+};
+
+exports.playlistByTitle = function(req, res, next, title) {
+
+    Playlist.findOne({title: title}).exec(function (err, playlist) {
+        if (err) {
+            return next(err);
+        }
+        req.model = playlist;
+        next();
     });
 };

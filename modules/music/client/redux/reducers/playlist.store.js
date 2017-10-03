@@ -1,7 +1,7 @@
 /**
  * Created by Dimitri Aguera on 08/09/2017.
  */
-import { ADD_PLAYLIST_ITEM, ADD_PLAYLIST, PLAY_ITEM } from '../actions'
+import { ACTIVATE_PLAYLIST, ADD_PLAYLIST, PLAY_ITEM } from '../actions'
 
 let initialState = {
     list: [],
@@ -9,6 +9,11 @@ let initialState = {
         name: null,
         src: null,
     },
+    playingList: {
+        plID: null,
+        onPlayIndex: 0,
+    },
+    activePlaylist: null,
 };
 
 export const playlistStore = (state = initialState, action) => {
@@ -20,15 +25,15 @@ export const playlistStore = (state = initialState, action) => {
                 onPlay: action.item
             };
 
+        case ACTIVATE_PLAYLIST:
+            return {
+                ...state,
+                activePlaylist: action.item
+            };
+
         case ADD_PLAYLIST:
             return {
 
-            };
-
-        case ADD_PLAYLIST_ITEM:
-            return {
-                ...state,
-                list: state.list.concat(action.item)
             };
 
         default:

@@ -152,6 +152,7 @@ module.exports.socketConnect = function(app) {
     const io = socketServer(serve);
 
     require('../modules/users/server/sockets/users.server.sockets')( socketsEvents, io );
+    require('../modules/music/server/sockets/music.server.sockets')( socketsEvents, io );
 
     return serve;
 };

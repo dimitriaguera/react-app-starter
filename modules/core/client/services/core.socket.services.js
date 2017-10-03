@@ -40,8 +40,27 @@ const socketService = {
         return socket;
     },
 
-    getPublicSocket: function() {
-        return io.connect( url );
+    getPublicSocket: function( namespace, path ) {
+
+        const nsp = namespace || 'public';
+        const options = {
+            path: path || '',
+        };
+
+        // Try to connect.
+        const socket = io.connect(url + nsp, options);
+
+        // Catch error on client side connexion request.
+        socket.on('connect_error', function(err) {
+            console.log('Connexion error : ', err);
+        });
+
+        // Catch error send by server.
+        socket.on('error', function(err) {
+            console.log('Server socket sent an error : ', err);
+        });
+
+        return socket;
     }
 };
 
