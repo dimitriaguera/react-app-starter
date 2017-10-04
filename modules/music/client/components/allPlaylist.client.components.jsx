@@ -3,7 +3,8 @@ import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { get, post } from 'core/client/services/core.api.services'
 import socketServices from 'core/client/services/core.socket.services'
-import { Item, Divider, Form, Message } from 'semantic-ui-react'
+import MenuPlaylist from './menuPlaylist.client.components'
+import { Item, Divider, Form, Message, Segment } from 'semantic-ui-react'
 
 class AllPlaylist extends Component {
 
@@ -72,12 +73,17 @@ class AllPlaylist extends Component {
 
         const playLists = allPlaylist.map( (item, i) => {
             return (
-                <Item key={i}>
-                    <Item.Content>
-                        <Item.Header as="h3"><Link to={`/playlist/${item.title}`}>{item.title}</Link></Item.Header>
-                        <Item.Meta>{item.tracks.length} Tracks</Item.Meta>
-                    </Item.Content>
-                </Item>
+                <Segment key={i}>
+                    <Item>
+                        <Item.Content>
+                            <Item.Extra><MenuPlaylist playlist={item} /></Item.Extra>
+                            <Item.Header as="h3">
+                                <Link to={`/playlist/${item.title}`}>{item.title}</Link>
+                            </Item.Header>
+                            <Item.Meta>{item.tracks.length} Tracks</Item.Meta>
+                        </Item.Content>
+                    </Item>
+                </Segment>
             );
         });
 

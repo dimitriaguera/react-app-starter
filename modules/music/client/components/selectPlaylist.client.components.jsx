@@ -20,6 +20,10 @@ class SelectPlaylist extends Component {
             .then( (data) => {
                 if( data.success ){
                     _self.setState({ allPlaylist: data.msg });
+
+                    if ( !_self.props.activePlaylist ) {
+                        _self.props.activatePlaylist( _self.state.allPlaylist[0] );
+                    }
                 }
             });
     }
@@ -43,6 +47,10 @@ class SelectPlaylist extends Component {
     render(){
 
         const { allPlaylist } = this.state;
+        const { activePlaylist } = this.props;
+
+        const defaultValue = activePlaylist ? activePlaylist.title : null;
+
         const playlistOptions = allPlaylist.map( (pl) => {
             return {
                 key: pl.title,
@@ -52,14 +60,14 @@ class SelectPlaylist extends Component {
         });
 
         return (
-            <Select placeholder='Select your playlist' onChange={this.handleChange} options={playlistOptions} />
+            <Select placeholder='Select your playlist' onChange={this.handleChange} value={defaultValue} options={playlistOptions} />
         );
     }
 }
 
 const mapStateToProps = state => {
     return {
-        activeList: state.playlistStore.activeList,
+        activePlaylist: state.playlistStore.activePlaylist,
     }
 };
 

@@ -17,6 +17,10 @@ module.exports = function(app){
     app.route('/api/playlist')
         .post( music.create );
 
+    // Add Tracks
+    app.route('/api/addtracks/:title')
+        .put( music.addTracks );
+
     // Unique playlist
     app.route('/api/playlist/:title')
         .get( music.playlist )

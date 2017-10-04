@@ -16,45 +16,53 @@ exports.read = function (req, res) {
     const query = req.query.path;
     const filePath = `${drive}/${query}`;
 
-    // Get buffer to extract MIME from checking magic number of the buffer.
-    const buffer = readChunk.sync(filePath, 0, 4100);
-    const ft = fileType( buffer );
-
     // Get stat file.
-    const stat = fs.statSync(filePath);
+    fs.stat(filePath, (err, stat) => {
 
-    // Create response Header.
-    res.writeHead(200, {
-        'Content-Type': ft.mime,
-        'Content-Length': stat.size
-    });
+        if ( err ) {
+            return res.status(404).json({
+                success: false,
+                msg: `Can't find file.`,
+            });
+        }
 
-    // Create Readable.
-    const audio = fs.createReadStream(filePath);
+        // Get buffer to extract MIME from checking magic number of the buffer.
+        const buffer = readChunk.sync(filePath, 0, 4100);
+        const ft = fileType( buffer );
 
-    // Pipe data in server response.
-    audio.pipe(res, { end: false });
+        // Create response Header.
+        res.writeHead(200, {
+            'Content-Type': ft.mime,
+            'Content-Length': stat.size
+        });
 
-    res.on('close', () => {
-        console.log('CLOSE RESP');
-    });
+        // Create Readable.
+        const audio = fs.createReadStream(filePath);
 
-    // Handle error event during stream.
-    audio.on( 'error', ( err ) => {
-        console.log( err.message );
-        res.end('Goodbye');
-    });
+        // Pipe data in server response.
+        audio.pipe(res, { end: false });
 
-    // Handle close event.
-    audio.on('close', () => {
-        console.log('CLOSE EVENT');
-        res.end('Goodbye');
-    });
+        res.on('close', () => {
+            console.log('CLOSE RESP');
+        });
 
-    // Handle end event.
-    audio.on('end', () => {
-        console.log('END EVENT');
-        res.end('Goodbye');
+        // Handle error event during stream.
+        audio.on( 'error', ( err ) => {
+            console.log( err.message );
+            res.end('Goodbye');
+        });
+
+        // Handle close event.
+        audio.on('close', () => {
+            console.log('CLOSE EVENT');
+            res.end('Goodbye');
+        });
+
+        // Handle end event.
+        audio.on('end', () => {
+            console.log('END EVENT');
+            res.end('Goodbye');
+        });
     });
 };
 
@@ -104,6 +112,26 @@ exports.allPlaylist = function (req, res) {
         res.json({
             success: true,
             msg: pls
+        });
+    });
+};
+
+exports.addTracks = function (req, res) {
+
+    const pl = req.model;
+
+    pl.tracks = pl.tracks.concat(req.body.tracks);
+
+    pl.save( function(err){
+        if (err) {
+            return res.status(422).json({
+                success: false,
+                msg: err
+            });
+        }
+        res.json({
+            success: true,
+            msg: pl
         });
     });
 };

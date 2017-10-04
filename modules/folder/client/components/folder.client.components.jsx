@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { List, Divider, Button, Icon, Breadcrumb } from 'semantic-ui-react'
+import { Link } from 'react-router-dom'
+import { List, Divider, Button, Icon, Breadcrumb, Segment, Label } from 'semantic-ui-react'
 import { get, put } from 'core/client/services/core.api.services'
 import { playItem, activatePlaylist } from 'music/client/redux/actions'
 import SelectPlaylist from 'music/client/components/selectPlaylist.client.components'
@@ -97,16 +98,18 @@ class Folder extends Component {
 
     handlerAddItem( item, path ) {
 
-        const play = {
+        const track = {
             name: item.name,
             src: path,
         };
 
         return (e) => {
             const pl = this.props.activePlaylist;
-            const tracks = pl.tracks.concat([play]);
+            const tracks = {
+                tracks: [track]
+            };
 
-            this.props.updatePlaylistItem( pl.title, tracks );
+            this.props.addPlaylistItems( pl.title, tracks );
             e.preventDefault();
         }
     }
@@ -114,6 +117,7 @@ class Folder extends Component {
     render(){
 
         const { folder, path, error } = this.state;
+        const { activePlaylist } = this.props;
         const bread = buildBread(path, this.handlerOpenFolder);
 
         const Bread = () => (
@@ -144,7 +148,10 @@ class Folder extends Component {
             <div>
                 <h1>Folder</h1>
                 <Divider/>
-                <SelectPlaylist />
+                <Segment>
+                    <SelectPlaylist />
+                    {activePlaylist && <Label as={Link} to={`/playlist/${activePlaylist.title}`} color='teal' tag>{`${activePlaylist.tracks.length} tracks`}</Label>}
+                </Segment>
                 <Button circular size="small" color="grey" basic disabled={!path.length} onClick={this.handlerPrevFolder} icon>
                     <Icon name='arrow left' />
                 </Button>
@@ -169,10 +176,9 @@ const mapDispatchToProps = dispatch => {
         fetchFolder: ( query ) => dispatch(
             get( `folder?path=${query || ''}` )
         ),
-        updatePlaylistItem: ( title, items ) => dispatch(
-
-            put( `playlist/${title}`, {
-                data: {tracks: items},
+        addPlaylistItems: ( title, items ) => dispatch(
+            put( `addtracks/${title}`, {
+                data: items,
                 types: {
                     HOOK_TYPE: ( data ) => {
                         return dispatch => {
