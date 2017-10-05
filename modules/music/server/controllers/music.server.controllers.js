@@ -159,7 +159,7 @@ exports.update = function (req, res) {
 
 exports.delete = function (req, res) {
     const pl = req.model;
-    Playlist.remove(function(err){
+    pl.remove(function(err){
         if (err) {
             return res.status(422).json({
                 success: false,

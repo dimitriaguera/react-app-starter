@@ -41,10 +41,7 @@ export const playlistStore = (state = initialState, action) => {
         case ADD_PLAYLIST_TO_PLAY:
             return {
                 ...state,
-                playingList: Object.assign({}, state.playingList, {
-                    pl: action.pl,
-                    onPlayIndex: action.onPlayIndex,
-                }),
+                playingList: Object.assign({}, state.playingList, action.item),
             };
 
         case ACTIVATE_PLAYLIST:

@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { get } from 'core/client/services/core.api.services'
-import { playItem, playPlaylist, playState, pauseState } from 'music/client/redux/actions'
+import { playItem, playOnPlaylist, playState, pauseState } from 'music/client/redux/actions'
+import MenuPlay from './menuPlay.client.components'
 import ReactAudioPlayer from 'react-audio-player'
 
 class Audio extends Component {
@@ -56,7 +57,7 @@ class Audio extends Component {
 
     render(){
 
-        const { onPlay, isPaused } = this.props;
+        const { onPlay, isPaused, playingList } = this.props;
 
         // Remotes events from redux store state.
         // If pause state, pause audio element.
@@ -67,7 +68,7 @@ class Audio extends Component {
         return (
             !!onPlay.src &&
             <div style={{width:'100%', position: 'fixed', bottom: '0', lineHeight: '0'}}>
-                <div style={{lineHeight: '1.5'}}>{onPlay.name}</div>
+                <MenuPlay playlist={playingList.pl} color='black' attached='top'/>
                 <ReactAudioPlayer
                     style={{width:'100%', height:'40px'}}
                     preload="auto"
@@ -102,7 +103,7 @@ const mapDispatchToProps = dispatch => {
             playState()
         ),
         nextTracks: ( item ) => dispatch(
-            playPlaylist( item )
+            playOnPlaylist( item )
         ),
     }
 };

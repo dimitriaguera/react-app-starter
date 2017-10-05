@@ -19,10 +19,16 @@ class SelectPlaylist extends Component {
         this.props.getAllPlaylistName()
             .then( (data) => {
                 if( data.success ){
+                    const {activePlaylist, defaultValue} = _self.props;
                     _self.setState({ allPlaylist: data.msg });
 
-                    if ( !_self.props.activePlaylist ) {
-                        _self.props.activatePlaylist( _self.state.allPlaylist[0] );
+                    if ( defaultValue ) {
+                        let pl = getValue(defaultValue, _self.state.allPlaylist);
+                        pl = pl ? pl : _self.state.allPlaylist[0];
+                        _self.props.activatePlaylist(pl);
+                    }
+                    else if ( !activePlaylist ) {
+                        _self.props.activatePlaylist(_self.state.allPlaylist[0]);
                     }
                 }
             });
@@ -32,15 +38,8 @@ class SelectPlaylist extends Component {
 
         const value = data.value;
         const allPl = this.state.allPlaylist;
+        const pl = getValue(value, allPl);
 
-        let pl;
-
-        for ( let i=0; i < allPl.length; i++ ) {
-            if ( allPl[i].title === value ) {
-                pl = allPl[i];
-                break;
-            }
-        }
         this.props.activatePlaylist(pl);
     }
 
@@ -86,5 +85,17 @@ const SelectPlaylistContainer = connect(
     mapStateToProps,
     mapDispatchToProps
 )(SelectPlaylist);
+
+
+// HELPER
+function getValue( value, array ) {
+    for ( let i=0; i < array.length; i++ ) {
+        if ( array[i].title === value ) {
+            return array[i];
+        }
+    }
+    return null;
+}
+
 
 export default SelectPlaylistContainer

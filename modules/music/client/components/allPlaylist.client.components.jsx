@@ -3,8 +3,8 @@ import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { get, post } from 'core/client/services/core.api.services'
 import socketServices from 'core/client/services/core.socket.services'
-import MenuPlaylist from './menuPlaylist.client.components'
-import { Item, Divider, Form, Message, Segment } from 'semantic-ui-react'
+import MenuPlay from './menuPlay.client.components'
+import { Divider, Form, Message, Card, Segment, Responsive } from 'semantic-ui-react'
 
 class AllPlaylist extends Component {
 
@@ -14,6 +14,7 @@ class AllPlaylist extends Component {
         this.handleInputChange = this.handleInputChange.bind(this);
         this.submitForm = this.submitForm.bind(this);
         this.state = {
+            nbCards: 3,
             allPlaylist: [],
             error: false,
             message: '',
@@ -67,23 +68,25 @@ class AllPlaylist extends Component {
             });
     }
 
+    handleOnResponsiveUpdate() {
+
+    }
+
     render(){
 
-        const { allPlaylist, error, message, title } = this.state;
+        const { allPlaylist, error, message, title, nbCards } = this.state;
 
         const playLists = allPlaylist.map( (item, i) => {
             return (
-                <Segment key={i}>
-                    <Item>
-                        <Item.Content>
-                            <Item.Extra><MenuPlaylist playlist={item} /></Item.Extra>
-                            <Item.Header as="h3">
-                                <Link to={`/playlist/${item.title}`}>{item.title}</Link>
-                            </Item.Header>
-                            <Item.Meta>{item.tracks.length} Tracks</Item.Meta>
-                        </Item.Content>
-                    </Item>
-                </Segment>
+                <Card key={i}>
+                    <Card.Content>
+                        <Card.Header as={Link} to={`/playlist/${item.title}`}>
+                            {item.title}
+                        </Card.Header>
+                        <Card.Meta>{item.tracks.length} Tracks</Card.Meta>
+                    </Card.Content>
+                    <Card.Content extra><MenuPlay isMini playlist={item} /></Card.Content>
+                </Card>
             );
         });
 
@@ -91,20 +94,26 @@ class AllPlaylist extends Component {
             <div>
                 <h1>All Playlists</h1>
                 <Divider/>
-                <Form error={error} onSubmit={this.submitForm}>
-                    <Message error content={message}/>
-                    <Form.Input
-                        action={{ color: 'teal', labelPosition: 'left', icon: 'list layout', content: 'Add' }}
-                        actionPosition='left'
-                        placeholder='Playlist Title...'
-                        name='title'
-                        value={title}
-                        onChange={this.handleInputChange}
-                    />
-                </Form>
-                <Item.Group>
-                    {playLists}
-                </Item.Group>
+
+                <Segment basic>
+                    <Form error={error} onSubmit={this.submitForm}>
+                        <Message error content={message}/>
+                        <Form.Input
+                            action={{ color: 'teal', labelPosition: 'left', icon: 'list layout', content: 'Add' }}
+                            actionPosition='left'
+                            placeholder='Playlist Title...'
+                            name='title'
+                            value={title}
+                            onChange={this.handleInputChange}
+                        />
+                    </Form>
+                </Segment>
+
+                <Segment basic>
+                    <Responsive as={Card.Group} onUpdate={this.handleOnResponsiveUpdate} itemsPerRow={nbCards}>
+                        {playLists}
+                    </Responsive>
+                </Segment>
             </div>
         );
     }

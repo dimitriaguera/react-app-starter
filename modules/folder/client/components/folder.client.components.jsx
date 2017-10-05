@@ -22,16 +22,18 @@ class Folder extends Component {
     componentWillMount() {
 
         const _self = this;
-        const { fetchFolder } = this.props;
+        const { fetchFolder, location } = this.props;
+        const params = new URLSearchParams(location.search);
 
         fetchFolder().then((data) => {
             if ( !data.success ) {
-                _self.setState({ error: true });
+                _self.setState({ error: true, params: params });
             }
             else {
                 _self.setState({
                     error: false,
-                    folder: data.msg
+                    folder: data.msg,
+                    params: params,
                 });
             }
         });
@@ -116,7 +118,7 @@ class Folder extends Component {
 
     render(){
 
-        const { folder, path, error } = this.state;
+        const { folder, path, error, params } = this.state;
         const { activePlaylist } = this.props;
         const bread = buildBread(path, this.handlerOpenFolder);
 
@@ -149,7 +151,7 @@ class Folder extends Component {
                 <h1>Folder</h1>
                 <Divider/>
                 <Segment>
-                    <SelectPlaylist />
+                    <SelectPlaylist defaultValue={ params? params.get('pl') : null } />
                     {activePlaylist && <Label as={Link} to={`/playlist/${activePlaylist.title}`} color='teal' tag>{`${activePlaylist.tracks.length} tracks`}</Label>}
                 </Segment>
                 <Button circular size="small" color="grey" basic disabled={!path.length} onClick={this.handlerPrevFolder} icon>

@@ -29,8 +29,7 @@ export const activatePlaylist = ( item ) => {
     }
 };
 
-export const playPlaylist = ( item ) => dispatch => {
-    dispatch(playState());
+export const playOnPlaylist = ( item ) => dispatch => {
     dispatch(addPlaylistToPlay(item));
     dispatch(playItem( item.pl.tracks[item.onPlayIndex] ));
 };
@@ -38,8 +37,7 @@ export const playPlaylist = ( item ) => dispatch => {
 export const addPlaylistToPlay = ( item ) => {
     return {
         type: ADD_PLAYLIST_TO_PLAY,
-        pl: item.pl,
-        onPlayIndex: item.onPlayIndex,
+        item: item
     }
 };
 
