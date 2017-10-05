@@ -137,8 +137,6 @@ module.exports.initRoutes = function(app) {
 
     // Modules routes
     require('../modules/users/server/routes/users.server.routes')(app);
-    require('../modules/folder/server/routes/folder.server.routes')(app);
-    require('../modules/music/server/routes/music.server.routes')(app);
     require('../modules/core/server/routes/core.server.routes')(app);
 
 };
@@ -152,7 +150,6 @@ module.exports.socketConnect = function(app) {
     const io = socketServer(serve);
 
     require('../modules/users/server/sockets/users.server.sockets')( socketsEvents, io );
-    require('../modules/music/server/sockets/music.server.sockets')( socketsEvents, io );
 
     return serve;
 };
